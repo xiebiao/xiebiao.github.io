@@ -8,12 +8,16 @@
 # Site settings
 title: 活在低处
 email: 
+desc: 是一种姿态，也是一种现状。
 description: # this means to ignore newlines until "baseurl:"
                         “来自山川湖海，却囿于昼夜，厨房与爱。”
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://posts.xiebiao.com" # the base hostname & protocol for your site
+url: "http://blog.xiebiao.com" # the base hostname & protocol for your site
 twitter_username: joyrap
 github_username:  xiebiao
 
 # Build settings
 markdown: kramdown
+plugins:
+  - jekyll-archives
+permalink: /:categories/:year/:month/:day/:title:output_ext
