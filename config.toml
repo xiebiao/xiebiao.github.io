@@ -1,0 +1,34 @@
+baseURL = "https://example.com"
+languageCode = "en-us"
+title = "于昼夜，思山川湖海。"
+theme = "sourgough-starter"
+relativeURLs = true
+
+[markup.goldmark.renderer]
+    unsafe= true
+
+[params]
+#------------- Config -------------------
+    scholarLink = true
+    scopusLink = true
+    dimensionsLink = true
+    dimensionCitations = true
+    backgroundPath = "images/SA_back.png"
+    googleScholar = 'XXXX' # These are needed only if set to true above
+    scopusID = 'XXXX'
+    dimensionsID = 'XXXX'
+    footerOffset = -60
+
+#-------------- Defined ------------
+    css= ["css/sourgough.css"]
+
+[menu]
+#----- Navbar links ------
+
+  [[menu.main]]
+    identifier = "blog"
+    name = "Blog"
+    url = "https://blog.xiebiao.com"
+
+[taxonomies]
+  authors = "authors"

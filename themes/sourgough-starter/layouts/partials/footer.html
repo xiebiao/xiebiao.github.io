@@ -1,0 +1,11 @@
+<footer class="footer mt-5">
+    <div class="text-center">
+        {{ now.Format "2006" }} &#169 {{ .Site.Title }}
+    </div>
+    <style>
+        :root {
+            --footerOffset: {{.Site.Params.footerOffset}}px
+        }
+    </style>
+</footer>
+

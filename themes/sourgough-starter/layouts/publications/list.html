@@ -1,0 +1,120 @@
+{{ define "main" }}
+<section class="blueish">
+<div class="container" id="publications" style="width: 80%;">
+    <div class="row">
+        <div class="col" style="text-align: left;">
+            <span>Research areas: <br>
+                {{ range $key, $val := .Params.researchAreas }}
+                    <a class="text-capitalize" href="{{ $val }}">{{ $key }}</a>
+                {{ end }}
+               
+            </span>
+        </div>
+        <div class="col" style="text-align: right;">
+        {{ if .Site.Params.scholarLink}}
+                <span style="font-size: smaller;color: rgba(211, 211, 211, 0.6);">
+                    <a 
+                    href="https://scholar.google.com/citations?user={{.Site.Params.googleScholar}}&hl=en"
+                    target="_blank"> 
+                    Google Scholar</a>
+                </span> <br>
+        {{ end }}
+        {{ if .Site.Params.scopusLink}}
+                <span style="font-size: smaller;color: rgba(211, 211, 211, 0.6);">
+                    <a 
+                    href="https://www.scopus.com/authid/detail.uri?authorId={{.Site.Params.scopusID}}"
+                    target="_blank"> 
+                    Scopus</a>
+                </span> <br>
+        {{ end }}
+        {{ if .Site.Params.dimensionsLink}}
+                <span style="font-size: smaller;color: rgba(211, 211, 211, 0.6);">
+                    <a 
+                    href="https://app.dimensions.ai/discover/publication?search_mode=content&and_facet_researcher={{.Site.Params.dimensionsID}}"
+                    target="_blank"> 
+                    Dimensions</a>
+                </span>
+        {{ end }}
+        </div>
+    </div>
+    {{ $year := 1}}
+    {{ range .Pages.ByDate.Reverse }}
+        
+        {{ $pubYear := .Date.Format "2006" }}
+        {{ if ne $year $pubYear }}
+            <hr class="year">
+            <h4 class="year">{{ $pubYear }}</h4>
+            
+            {{ $year = $pubYear }}
+        {{ end }}
+        
+        {{ if isset .Params "type" }} 
+            <span class="type">[{{ .Params.type }}] </span>
+        {{ end }}
+        <div class="row align-items-end">
+                {{ if isset .Params "link" }}
+                    {{ if isset .Params "doi" }}
+                        <div class="col-auto">
+                            <a href="{{ .Params.link }}" target="_blank">{{.Title | markdownify}}</a> 
+                        </div>
+                            {{ if .Site.Params.dimensionCitations }}
+                            <div class="col-auto" >
+                                <span
+                                class="__dimensions_badge_embed__"
+                                data-doi="{{.Params.doi}}"
+                                data-hide-zero-citations="true"
+                                data-style="small_rectangle"></span>
+                            </div>
+                        {{ end }}
+                    {{ else }}
+                        <div class="col-auto">
+                            <a href="{{ .Params.link }}" target="_blank">{{.Title | markdownify}}</a> 
+                        </div>
+                    {{ end }}
+                {{ else }}
+                    <span>{{ .Title | markdownify }}</span>
+                {{end}}
+        </div>
+        <div>
+        {{ $first := true }}
+        {{ range (.GetTerms "authors") }}
+            {{ if $first }}
+                {{ if eq .LinkTitle .Site.Title }} 
+                    <b>{{ .LinkTitle }}</b>
+                {{ else }}
+                    {{ .LinkTitle }} 
+                {{ end }}
+                {{ $first = false }}
+            {{ else }}
+                {{ if eq .LinkTitle .Site.Title }} 
+                    | <b>{{ .LinkTitle }}</b>
+                {{ else }}
+                    | {{ .LinkTitle }} 
+                {{ end }}
+            {{ end }}
+        {{ end }}
+        <br>
+
+        <em>{{ .Params.Journal }} {{ $pubYear }}.</em>
+        {{ if isset .Params "pmid" }}
+            <span>
+                PMID: {{ .Params.PMID }}.
+                
+            </span>
+        {{ end }}
+        </div>
+        
+        
+        
+        <br><br>
+    {{end}}
+    
+</div>
+<script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+<style>
+    .footer {
+        color: white;
+    }
+</style>
+</section>
+{{ end }}
