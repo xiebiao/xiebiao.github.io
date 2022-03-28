@@ -1,6 +1,6 @@
 baseURL = "https://xiebiao.com"
 languageCode = "en-us"
-title = "于昼夜，思山川湖海。"
+title = "于昼夜，思山川湖海"
 theme = "sourgough-starter"
 relativeURLs = true
 
