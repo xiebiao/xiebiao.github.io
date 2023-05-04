@@ -1,6 +1,6 @@
 baseURL = "https://xiebiao.com"
 languageCode = "en-us"
-title = "2013年，稻城亚丁。"
+title = "2013年，新都桥"
 theme = "sourgough-starter"
 relativeURLs = true
 
@@ -13,7 +13,7 @@ relativeURLs = true
     scopusLink = true
     dimensionsLink = true
     dimensionCitations = true
-    backgroundPath = "images/yading-2.jpg"
+    backgroundPath = "images/xinduqiao-1.jpg"
     googleScholar = 'XXXX' # These are needed only if set to true above
     scopusID = 'XXXX'
     dimensionsID = 'XXXX'
