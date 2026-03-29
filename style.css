@@ -1,0 +1,95 @@
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #faf8f5;
+  color: #2c2c2c;
+  font-size: clamp(14px, 1vw + 0.5rem, 20px);
+  font-family: 'LXGW WenKai', 'STKaiti', 'KaiTi', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  width: 100%;
+}
+
+figure {
+  text-align: center;
+}
+
+figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background-color: #e8e4df;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.subtitle {
+  margin-top: 1rem;
+  font-size: clamp(0.75rem, 0.5vw + 0.5rem, 0.95rem);
+  color: #999;
+  letter-spacing: 0.1em;
+}
+
+figcaption {
+  margin-top: 2.5rem;
+}
+
+
+.poem {
+  margin-top: 2.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  color: #6b6b6b;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+
+.poem h3 {
+  font-size: clamp(1rem, 0.8vw + 0.6rem, 1.25rem);
+  font-weight: normal;
+  color: #2c2c2c;
+  margin-bottom: 1rem;
+}
+
+.poem p {
+  font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1.125rem);
+  margin: 0;
+}
+
+footer {
+  padding: 3rem 0 2rem;
+  text-align: right;
+  border-top: 1px solid #e0dcd7;
+  margin-top: 3rem;
+}
+
+footer a {
+  color: #999;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: #2c2c2c;
+}
+
+@media (max-width: 639px) {
+  main {
+    padding-top: 8vh;
+  }
+
+  .poem {
+    margin-top: 1.5rem;
+  }
+}
