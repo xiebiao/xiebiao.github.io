@@ -68,21 +68,6 @@ figcaption {
   margin: 0;
 }
 
-footer {
-  padding: 3rem 0 2rem;
-  text-align: right;
-  border-top: 1px solid #e0dcd7;
-  margin-top: 3rem;
-}
-
-footer a {
-  color: #999;
-  transition: color 0.2s;
-}
-
-footer a:hover {
-  color: #2c2c2c;
-}
 
 @media (max-width: 639px) {
   main {
