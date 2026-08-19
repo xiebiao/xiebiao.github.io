@@ -11,9 +11,10 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260819">
 </head>
 <body>
+  <button class="language-toggle" type="button" aria-label="Switch to English">English</button>
   <main>
     <div class="grid-container fluid">
       <div class="grid-x align-center">
@@ -21,16 +22,19 @@
           <figure>
             <a href="https://blog.xiebiao.com" target="_blank" rel="noopener noreferrer">
             <picture>
-              <!-- 移动端：宽度 ≤ 600px，按 1x/2x 选图 -->
+              <!-- 移动端：按实际显示宽度选择轻量图片，最大不超过 720px -->
               <source
                 media="(max-width: 600px)"
-                srcset="images/photo-480w.jpg 1x,
-                        images/photo-960w.jpg 2x">
-              <!-- PC 端：按设备像素比选图 -->
+                srcset="images/photo-480w.jpg 480w,
+                        images/photo-720w.jpg 720w"
+                sizes="calc(100vw - 2rem)">
+              <!-- 平板与桌面端：按实际显示宽度和像素密度选图 -->
               <source
-                srcset="images/photo-960w.jpg 1x,
-                        images/photo-1920w.jpg 2x,
-                        images/photo-2880w.jpg 3x">
+                srcset="images/photo-960w.jpg 960w,
+                        images/photo-1440w.jpg 1440w,
+                        images/photo-1920w.jpg 1920w,
+                        images/photo-2880w.jpg 2880w"
+                sizes="(max-width: 992px) calc(100vw - 2rem), 960px">
               <img
                 src="images/photo-960w.jpg"
                 alt="Biao Xie"
@@ -39,21 +43,86 @@
                 loading="lazy">
             </picture>
             </a>
-            <p class="subtitle">二零二五八月·青海茫崖冷湖</p>
+            <p class="subtitle" data-i18n="subtitle">二零二五·八月·中国·青海茫崖冷湖</p>
           </figure>
           <div class="poem">
-            <p>傍晚</p>
-            <p>躺在丰收后的油菜地里</p>
-            <p>仰望着故乡的天空</p>
-            <p>有几只飞鸟</p>
-            <p>吃掉了刚刚升起的星星</p>
+            <p data-i18n="poemLine1">傍晚</p>
+            <p data-i18n="poemLine2">躺在丰收后的油菜地里</p>
+            <p data-i18n="poemLine3">仰望着故乡的天空</p>
+            <p data-i18n="poemLine4">有几只飞鸟</p>
+            <p data-i18n="poemLine5">吃掉了刚刚升起的星星</p>
             <br>
-            <p>那一夜</p>
-            <p>睡得很深，深到土里</p>
+            <p data-i18n="poemLine6">那一夜</p>
+            <p data-i18n="poemLine7">睡得很深，深到土里</p>
           </div>
         </div>
       </div>
     </div>
   </main>
+  <footer class="site-footer" aria-label="Social links">
+    <a href="https://x.com/joyrap" target="_blank" rel="noopener noreferrer" aria-label="X">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+      </svg>
+    </a>
+    <a href="https://www.douban.com/people/xiebiao80/" target="_blank" rel="noopener noreferrer" aria-label="豆瓣">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M.51 3.06h22.98V.755H.51V3.06Zm20.976 2.537v9.608h-2.137l-1.669 5.76H24v2.28H0v-2.28h6.32l-1.67-5.76H2.515V5.597h18.972Zm-5.066 9.608H7.58l1.67 5.76h5.501l1.67-5.76ZM18.367 7.9H5.634v5.025h12.733V7.9Z"></path>
+      </svg>
+    </a>
+    <a href="https://xiebiao.com" target="_blank" rel="noopener noreferrer" aria-label="xiebiao.com">
+      <img src="favicon-16x16.png" alt="" width="14" height="14">
+    </a>
+  </footer>
+  <script>
+    const translations = {
+      zh: {
+        title: '于川海',
+        subtitle: '二零二五·八月·中国·青海茫崖冷湖',
+        poemLine1: '傍晚',
+        poemLine2: '躺在丰收后的油菜地里',
+        poemLine3: '仰望着故乡的天空',
+        poemLine4: '有几只飞鸟',
+        poemLine5: '吃掉了刚刚升起的星星',
+        poemLine6: '那一夜',
+        poemLine7: '睡得很深，深到土里'
+      },
+      en: {
+        title: 'Biao Xie',
+        subtitle: 'August 2025 · Lenghu, Mangya, Qinghai, China',
+        poemLine1: 'At dusk',
+        poemLine2: 'I lay in a rapeseed field after the harvest',
+        poemLine3: 'gazing up at the sky above my hometown',
+        poemLine4: 'a few birds',
+        poemLine5: 'ate the stars that had just risen',
+        poemLine6: 'That night',
+        poemLine7: 'I slept deeply, deep into the earth'
+      }
+    };
+
+    const languageToggle = document.querySelector('.language-toggle');
+
+    function setLanguage(language) {
+      const copy = translations[language];
+      document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+      document.title = copy.title;
+      document.querySelectorAll('[data-i18n]').forEach((element) => {
+        element.textContent = copy[element.dataset.i18n];
+      });
+      languageToggle.textContent = language === 'zh' ? 'English' : '中文';
+      languageToggle.setAttribute(
+        'aria-label',
+        language === 'zh' ? 'Switch to English' : '切换到中文'
+      );
+      localStorage.setItem('language', language);
+    }
+
+    const savedLanguage = localStorage.getItem('language');
+    setLanguage(savedLanguage === 'en' ? 'en' : 'zh');
+
+    languageToggle.addEventListener('click', () => {
+      setLanguage(document.documentElement.lang === 'en' ? 'zh' : 'en');
+    });
+  </script>
 </body>
 </html>

@@ -1,5 +1,18 @@
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('fonts/source-serif-4/SourceSerif4-Variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
-  min-width: 320px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,17 +24,70 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[lang="en"] body {
+  font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
+}
+
+.language-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
+  margin: 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(44, 44, 44, 0.16);
+  border-radius: 999px;
+  background: rgba(250, 248, 245, 0.88);
+  color: #6b6b6b;
+  font-family: inherit;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+html[lang="en"] .language-toggle {
+  font-family: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+}
+
+.language-toggle:hover,
+.language-toggle:focus-visible {
+  border-color: rgba(44, 44, 44, 0.35);
+  background: #fff;
+  color: #2c2c2c;
+}
+
+.language-toggle:focus-visible {
+  outline: 2px solid rgba(44, 44, 44, 0.3);
+  outline-offset: 3px;
+}
+
 main {
-  flex: 1;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 10vh;
+  padding: 10vh 1rem 4rem;
+  width: 100%;
+}
+
+.grid-container,
+.grid-x,
+.cell {
   width: 100%;
 }
 
 figure {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   text-align: center;
+}
+
+figure a,
+figure picture {
+  display: block;
+  width: 100%;
 }
 
 figure img {
@@ -35,8 +101,10 @@ figure img {
 
 .subtitle {
   margin-top: 1rem;
+  padding: 0 0.5rem;
   font-size: clamp(0.75rem, 0.5vw + 0.5rem, 0.95rem);
   color: #999;
+  line-height: 1.6;
   letter-spacing: 0.1em;
 }
 
@@ -68,13 +136,63 @@ figcaption {
   margin: 0;
 }
 
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0 1rem 3rem;
+}
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: #999;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  background-color: rgba(44, 44, 44, 0.05);
+  color: #2c2c2c;
+}
+
+.site-footer a:focus-visible {
+  outline: 2px solid rgba(44, 44, 44, 0.3);
+  outline-offset: 2px;
+}
+
+.site-footer img,
+.site-footer svg {
+  display: block;
+}
+
 
 @media (max-width: 639px) {
+  .language-toggle {
+    top: 1rem;
+    right: 1rem;
+  }
+
   main {
-    padding-top: 8vh;
+    padding: 5.5rem 1rem 3rem;
+  }
+
+  figure img {
+    border-radius: 8px;
   }
 
   .poem {
     margin-top: 1.5rem;
+    max-width: 100%;
+  }
+
+  .site-footer {
+    padding-bottom: 2rem;
   }
 }
