@@ -135,7 +135,7 @@ html[lang="en"] .language-toggle {
 .projects h2 {
   margin: 0 0 0.65rem;
   color: #999;
-  font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
+  font-family: inherit;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
