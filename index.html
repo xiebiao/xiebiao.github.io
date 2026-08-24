@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>于川海</title>
+  <meta name="description" content="于川海（Bill Xie）的个人网站，记录摄影、诗歌与独立作品，包括运动训练计时器 PushBeat。">
+  <link rel="canonical" href="https://xiebiao.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://xiebiao.com/">
+  <meta property="og:site_name" content="xiebiao.com">
+  <meta property="og:title" content="于川海 · Bill Xie">
+  <meta property="og:description" content="摄影、诗歌与独立作品，包括运动训练计时器 PushBeat。">
+  <meta property="og:image" content="https://xiebiao.com/images/photo-1920w.jpg">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="青海茫崖冷湖的风景摄影">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="于川海 · Bill Xie">
+  <meta name="twitter:description" content="摄影、诗歌与独立作品，包括运动训练计时器 PushBeat。">
+  <meta name="twitter:image" content="https://xiebiao.com/images/photo-1920w.jpg">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -11,31 +27,106 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css">
-  <link rel="stylesheet" href="style.css?v=20260819">
+  <link rel="stylesheet" href="style.css?v=20260824-2">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://xiebiao.com/#person",
+          "name": "Bill Xie",
+          "url": "https://xiebiao.com/",
+          "image": "https://xiebiao.com/images/my-avatar-256.png",
+          "sameAs": [
+            "https://x.com/joyrap",
+            "https://www.douban.com/people/xiebiao80/"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://pushbeat.app/#app",
+          "name": "PushBeat",
+          "url": "https://pushbeat.app/",
+          "description": "A focused fitness training timer for athletes.",
+          "applicationCategory": "SportsApplication",
+          "operatingSystem": "iOS, Android",
+          "creator": {
+            "@id": "https://xiebiao.com/#person"
+          }
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
   <button class="language-toggle" type="button" aria-label="Switch to English">English</button>
-  <main>
-    <div class="grid-container fluid">
-      <div class="grid-x align-center">
-        <div class="cell small-12">
+  <main class="site-layout">
+    <aside class="profile" aria-label="Personal information">
+      <a class="profile-avatar-link" href="https://xiebiao.com" target="_blank" rel="noopener noreferrer">
+        <picture class="profile-avatar-picture">
+          <source srcset="images/my-avatar-256.webp" type="image/webp">
+          <img class="profile-avatar" src="images/my-avatar-256.png" alt="Biao Xie" width="256" height="256">
+        </picture>
+      </a>
+      <div class="profile-copy">
+        <h1 class="profile-name" data-i18n="profileName">于川海</h1>
+        <a class="profile-site" href="https://xiebiao.com" target="_blank" rel="noopener noreferrer">xiebiao.com</a>
+      </div>
+      <nav class="projects" aria-label="Projects">
+        <h2 data-i18n="projectsLabel">项目</h2>
+        <a class="project-link project-link-external" href="https://pushbeat.app" target="_blank" rel="noopener noreferrer">
+          <span class="project-link-title">
+            <img class="project-logo" src="images/pushbeat-mark.svg" alt="" width="16" height="16">
+            <span class="project-name">PushBeat</span>
+            <span class="external-arrow" aria-hidden="true">↗</span>
+          </span>
+          <span class="project-description" data-i18n="pushbeatDescription">训练计时器</span>
+        </a>
+      </nav>
+      <div class="social-links" aria-label="Social links">
+        <a href="https://x.com/joyrap" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+          </svg>
+        </a>
+        <a href="https://www.douban.com/people/xiebiao80/" target="_blank" rel="noopener noreferrer" aria-label="豆瓣">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M.51 3.06h22.98V.755H.51V3.06Zm20.976 2.537v9.608h-2.137l-1.669 5.76H24v2.28H0v-2.28h6.32l-1.67-5.76H2.515V5.597h18.972Zm-5.066 9.608H7.58l1.67 5.76h5.501l1.67-5.76ZM18.367 7.9H5.634v5.025h12.733V7.9Z"></path>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/pushbeat.app" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6Zm9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"></path>
+          </svg>
+        </a>
+      </div>
+    </aside>
+    <section class="project-content" id="yuchuanhai" aria-labelledby="project-heading">
+      <h2 class="visually-hidden" id="project-heading">于川海</h2>
+      <div class="grid-container fluid">
+        <div class="grid-x align-center">
+          <div class="cell small-12">
           <figure>
-            <a href="https://blog.xiebiao.com" target="_blank" rel="noopener noreferrer">
+            <a class="photo-link" href="?photo=2#yuchuanhai" aria-label="查看下一张照片">
             <picture>
               <!-- 移动端：按实际显示宽度选择轻量图片，最大不超过 720px -->
               <source
+                class="photo-source-mobile"
                 media="(max-width: 600px)"
                 srcset="images/photo-480w.jpg 480w,
                         images/photo-720w.jpg 720w"
                 sizes="calc(100vw - 2rem)">
               <!-- 平板与桌面端：按实际显示宽度和像素密度选图 -->
               <source
+                class="photo-source-desktop"
                 srcset="images/photo-960w.jpg 960w,
                         images/photo-1440w.jpg 1440w,
                         images/photo-1920w.jpg 1920w,
                         images/photo-2880w.jpg 2880w"
                 sizes="(max-width: 992px) calc(100vw - 2rem), 960px">
               <img
+                class="main-photo"
                 src="images/photo-960w.jpg"
                 alt="Biao Xie"
                 width="1920"
@@ -45,7 +136,7 @@
             </a>
             <p class="subtitle" data-i18n="subtitle">二零二五·八月·中国·青海茫崖冷湖</p>
           </figure>
-          <div class="poem">
+          <div class="poem photo-copy photo-copy-primary">
             <p data-i18n="poemLine1">傍晚</p>
             <p data-i18n="poemLine2">躺在丰收后的油菜地里</p>
             <p data-i18n="poemLine3">仰望着故乡的天空</p>
@@ -55,29 +146,51 @@
             <p data-i18n="poemLine6">那一夜</p>
             <p data-i18n="poemLine7">睡得很深，深到土里</p>
           </div>
+          <div class="poem photo-copy photo-copy-secondary" hidden>
+            <p data-i18n="quoteLine1">世界上只有一种真正的英雄主义</p>
+            <p data-i18n="quoteLine2">那就是在认清生活的真相之后</p>
+            <p data-i18n="quoteLine3">依然热爱生活</p>
+            <br>
+            <p class="quote-author" data-i18n="quoteAuthor">—— 罗曼·罗兰</p>
+          </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   </main>
-  <footer class="site-footer" aria-label="Social links">
-    <a href="https://x.com/joyrap" target="_blank" rel="noopener noreferrer" aria-label="X">
-      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-      </svg>
-    </a>
-    <a href="https://www.douban.com/people/xiebiao80/" target="_blank" rel="noopener noreferrer" aria-label="豆瓣">
-      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M.51 3.06h22.98V.755H.51V3.06Zm20.976 2.537v9.608h-2.137l-1.669 5.76H24v2.28H0v-2.28h6.32l-1.67-5.76H2.515V5.597h18.972Zm-5.066 9.608H7.58l1.67 5.76h5.501l1.67-5.76ZM18.367 7.9H5.634v5.025h12.733V7.9Z"></path>
-      </svg>
-    </a>
-    <a href="https://xiebiao.com" target="_blank" rel="noopener noreferrer" aria-label="xiebiao.com">
-      <img src="favicon-16x16.png" alt="" width="14" height="14">
-    </a>
-  </footer>
   <script>
+    const photoLink = document.querySelector('.photo-link');
+    const mobilePhotoSource = document.querySelector('.photo-source-mobile');
+    const desktopPhotoSource = document.querySelector('.photo-source-desktop');
+    const mainPhoto = document.querySelector('.main-photo');
+    const photoSubtitle = document.querySelector('.subtitle');
+    const primaryPhotoCopy = document.querySelector('.photo-copy-primary');
+    const secondaryPhotoCopy = document.querySelector('.photo-copy-secondary');
+    const isSecondPhoto = new URLSearchParams(window.location.search).get('photo') === '2';
+
+    if (isSecondPhoto) {
+      mobilePhotoSource.srcset = 'images/blog-photo-480w.jpg 360w, images/blog-photo-960w.jpg 720w';
+      desktopPhotoSource.srcset = 'images/blog-photo-960w.jpg 720w, images/blog-photo-1920w.jpg 1440w';
+      mobilePhotoSource.sizes = '(max-width: 512px) 82vw, 420px';
+      desktopPhotoSource.sizes = '(max-width: 760px) 82vw, 620px';
+      mainPhoto.src = 'images/blog-photo-960w.jpg';
+      mainPhoto.width = 1440;
+      mainPhoto.height = 1920;
+      mainPhoto.alt = '收获后的田野与白桦林';
+      photoSubtitle.hidden = true;
+      primaryPhotoCopy.hidden = true;
+      secondaryPhotoCopy.hidden = false;
+      photoLink.classList.add('is-portrait');
+      photoLink.href = './#yuchuanhai';
+      photoLink.setAttribute('aria-label', '返回上一张照片');
+    }
+
     const translations = {
       zh: {
         title: '于川海',
+        profileName: '于川海',
+        projectsLabel: '项目',
+        pushbeatDescription: '训练计时器',
         subtitle: '二零二五·八月·中国·青海茫崖冷湖',
         poemLine1: '傍晚',
         poemLine2: '躺在丰收后的油菜地里',
@@ -85,10 +198,17 @@
         poemLine4: '有几只飞鸟',
         poemLine5: '吃掉了刚刚升起的星星',
         poemLine6: '那一夜',
-        poemLine7: '睡得很深，深到土里'
+        poemLine7: '睡得很深，深到土里',
+        quoteLine1: '世界上只有一种真正的英雄主义',
+        quoteLine2: '那就是在认清生活的真相之后',
+        quoteLine3: '依然热爱生活',
+        quoteAuthor: '—— 罗曼·罗兰'
       },
       en: {
-        title: 'Biao Xie',
+        title: 'Bill Xie',
+        profileName: 'Bill Xie',
+        projectsLabel: 'Projects',
+        pushbeatDescription: 'Fitness Timer',
         subtitle: 'August 2025 · Lenghu, Mangya, Qinghai, China',
         poemLine1: 'At dusk',
         poemLine2: 'I lay in a rapeseed field after the harvest',
@@ -96,7 +216,11 @@
         poemLine4: 'a few birds',
         poemLine5: 'ate the stars that had just risen',
         poemLine6: 'That night',
-        poemLine7: 'I slept deeply, deep into the earth'
+        poemLine7: 'I slept deeply, deep into the earth',
+        quoteLine1: 'There is only one true heroism in the world:',
+        quoteLine2: 'to see life as it really is',
+        quoteLine3: 'and still love it.',
+        quoteAuthor: '— Romain Rolland'
       }
     };
 
