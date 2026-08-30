@@ -13,6 +13,13 @@
     {{ end }}
   {{ end }}
   <article class="latest-photo-story">
+    <div class="photo-story-gallery">
+      {{ range $index, $image := $latest.Params.images }}
+      <figure class="photo-story-frame">
+        {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" (eq $index 0)) }}
+      </figure>
+      {{ end }}
+    </div>
     <header class="photo-story-header">
       <h1 id="page-heading"><a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></h1>
       <div class="photo-story-meta">
@@ -21,14 +28,6 @@
       </div>
       {{ with $latest.Content }}<div class="photo-story-intro">{{ . }}</div>{{ end }}
     </header>
-    <div class="photo-story-gallery">
-      {{ range $index, $image := $latest.Params.images }}
-      <figure class="photo-story-frame">
-        {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" (eq $index 0)) }}
-        {{ with $image.caption }}<figcaption>{{ . }}</figcaption>{{ end }}
-      </figure>
-      {{ end }}
-    </div>
   </article>
   {{ else }}
   <section class="photo-empty-state" aria-labelledby="page-heading">

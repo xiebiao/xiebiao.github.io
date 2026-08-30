@@ -40,7 +40,7 @@ func run() error {
 		return err
 	}
 	handler, err := manager.NewServer(manager.ServerOptions{
-		Repository: repository, Objects: objects, Manifest: config.manifest,
+		Repository: repository, Objects: objects, Manifest: config.manifest, ContentRoot: config.content,
 	})
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func run() error {
 
 type config struct {
 	endpoint, bucket, accessKeyID, secretAccessKey, publicBaseURL string
-	database, manifest                                            string
+	database, manifest, content                                   string
 	port                                                          int
 }
 
@@ -92,10 +92,11 @@ func loadConfig() (config, error) {
 	}
 	database := envOr("MEDIA_DATABASE", filepath.Join("var", "media.db"))
 	manifest := envOr("MEDIA_MANIFEST", filepath.Join("..", "..", "data", "media", "assets.json"))
+	content := envOr("MEDIA_CONTENT", filepath.Join("..", "..", "content"))
 	result := config{
 		endpoint: endpoint, bucket: os.Getenv("R2_BUCKET"), accessKeyID: os.Getenv("R2_ACCESS_KEY_ID"),
 		secretAccessKey: os.Getenv("R2_SECRET_ACCESS_KEY"), publicBaseURL: envOr("MEDIA_BASE_URL", "https://media.xiebiao.com"),
-		database: database, manifest: manifest, port: port,
+		database: database, manifest: manifest, content: content, port: port,
 	}
 	if result.endpoint == "" || result.bucket == "" || result.accessKeyID == "" || result.secretAccessKey == "" {
 		return config{}, errors.New("R2_ACCOUNT_ID (or R2_ENDPOINT), R2_BUCKET, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are required")

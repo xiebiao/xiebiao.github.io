@@ -167,6 +167,22 @@ SELECT changes();`, quote(strings.TrimSpace(update.Alt)), quote(strings.TrimSpac
 	return r.Get(ctx, id)
 }
 
+func (r *Repository) ReplaceVariants(ctx context.Context, id string, variants []Variant, updatedAt string) (Asset, error) {
+	var statement strings.Builder
+	statement.WriteString("PRAGMA foreign_keys = ON; BEGIN IMMEDIATE;\n")
+	fmt.Fprintf(&statement, "DELETE FROM variants WHERE asset_id = %s;\n", quote(id))
+	for _, variant := range variants {
+		fmt.Fprintf(&statement, `INSERT INTO variants (asset_id, width, height, format, object_key, url, size)
+VALUES (%s, %d, %d, %s, %s, %s, %d);`+"\n", quote(id), variant.Width, variant.Height,
+			quote(variant.Format), quote(variant.Key), quote(variant.URL), variant.Size)
+	}
+	fmt.Fprintf(&statement, "UPDATE assets SET updated_at = %s WHERE id = %s;\nCOMMIT;", quote(updatedAt), quote(id))
+	if _, err := r.run(ctx, statement.String()); err != nil {
+		return Asset{}, err
+	}
+	return r.Get(ctx, id)
+}
+
 func (r *Repository) Delete(ctx context.Context, id string) error {
 	output, err := r.query(ctx, fmt.Sprintf("PRAGMA foreign_keys = ON; DELETE FROM assets WHERE id = %s; SELECT changes();", quote(id)))
 	if err != nil {

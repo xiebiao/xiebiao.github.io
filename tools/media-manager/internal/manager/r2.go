@@ -72,6 +72,30 @@ func (s *R2Store) Put(ctx context.Context, object Object) error {
 	return nil
 }
 
+func (s *R2Store) Get(ctx context.Context, key string) ([]byte, error) {
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, s.objectURL(key), nil)
+	if err != nil {
+		return nil, err
+	}
+	s.sign(request, nil)
+	response, err := s.client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return nil, responseError(response)
+	}
+	body, err := io.ReadAll(io.LimitReader(response.Body, maxUploadBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(body) > maxUploadBytes {
+		return nil, errors.New("R2 object exceeds 50 MiB")
+	}
+	return body, nil
+}
+
 func (s *R2Store) Delete(ctx context.Context, keys []string) error {
 	for _, key := range keys {
 		request, err := http.NewRequestWithContext(ctx, http.MethodDelete, s.objectURL(key), nil)

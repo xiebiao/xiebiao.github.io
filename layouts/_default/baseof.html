@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="{{ site.Language.Locale }}">
 <head>
-  {{ $socialImage := .Params.image | default .Params.cover | default "images/photo-1920w.jpg" }}
+  {{ $socialImage := .Params.image | default .Params.cover }}
+  {{ with .Params.coverAsset }}
+    {{ $coverAsset := index hugo.Data.media.assets . }}
+    {{ if not $coverAsset }}{{ errorf "unknown cover media asset %q for %s" . $.Path }}{{ end }}
+    {{ if $coverAsset }}
+      {{ $coverVariants := sort $coverAsset.variants "width" "asc" }}
+      {{ $coverFallback := index (last 1 $coverVariants) 0 }}
+      {{ $socialImage = $coverFallback.url }}
+    {{ end }}
+  {{ end }}
+  {{ $socialImage = $socialImage | default "images/photo-1920w.jpg" }}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>

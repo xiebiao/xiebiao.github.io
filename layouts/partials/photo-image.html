@@ -1,6 +1,13 @@
 {{ $image := .image }}
 {{ $destinations := .destinations }}
 {{ $hasDestinations := gt (len $destinations) 0 }}
+{{ $asset := false }}
+{{ $caption := $image.caption }}
+{{ with $image.asset }}
+  {{ $asset = index hugo.Data.media.assets . }}
+  {{ if not $asset }}{{ errorf "unknown photo media asset %q" . }}{{ end }}
+  {{ if and $asset (not $caption) }}{{ $caption = $asset.caption }}{{ end }}
+{{ end }}
 {{ if $hasDestinations }}
 <a
   class="photo-random-link"
@@ -8,6 +15,18 @@
   data-photo-destinations="{{ $destinations | jsonify }}"
   aria-label="{{ i18n "randomPhotoAria" }}">
 {{ end }}
+{{ if $asset }}
+  {{ $variants := sort $asset.variants "width" "asc" }}
+  {{ $fallback := index (last 1 $variants) 0 }}
+  <img
+    src="{{ $fallback.url }}"
+    srcset="{{ range $sourceIndex, $source := $variants }}{{ if $sourceIndex }}, {{ end }}{{ $source.url }} {{ $source.width }}w{{ end }}"
+    sizes="(max-width: 900px) calc(100vw - 2rem), 1200px"
+    alt="{{ $image.alt | default $asset.alt }}"
+    width="{{ $fallback.width }}"
+    height="{{ $fallback.height }}"
+    {{ if .eager }}fetchpriority="high"{{ else }}loading="lazy"{{ end }}>
+{{ else }}
   <img
     src="{{ $image.src | relURL }}"
     {{ with $image.srcset }}srcset="{{ range $sourceIndex, $source := . }}{{ if $sourceIndex }}, {{ end }}{{ $source.src | relURL }} {{ $source.width }}w{{ end }}"{{ end }}
@@ -16,6 +35,8 @@
     width="{{ $image.width }}"
     height="{{ $image.height }}"
     {{ if .eager }}fetchpriority="high"{{ else }}loading="lazy"{{ end }}>
+{{ end }}
 {{ if $hasDestinations }}
 </a>
 {{ end }}
+{{ with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}

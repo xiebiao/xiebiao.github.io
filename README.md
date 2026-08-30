@@ -23,7 +23,7 @@ A Chinese-only article may use either `my-post.md` or `my-post.zh.md`. Shared in
 
 - `content/projects/` uses product portfolio templates. Project front matter supports `logo`, `externalURL`, `platforms`, and `status`.
 - `content/posts/` uses long-form article templates and the managed-media shortcode below.
-- `content/photos/` uses gallery templates. Photo front matter supports `cover`, `location`, and an `images` list with responsive `srcset` entries.
+- `content/photos/` uses gallery templates. Set `coverAsset` and each `images[].asset` to an ID exported by the media manager; the templates resolve responsive R2 URLs from `data/media/assets.json`. Legacy local `src` and `srcset` entries remain supported.
 
 Each section has independent list and single-page templates under `layouts/projects/`, `layouts/posts/`, and `layouts/photos/`.
 
@@ -34,3 +34,13 @@ Reference managed media from either language with:
 ```
 
 The shortcode reads public media metadata from `data/media/assets.json`, which is exported by the local media manager.
+
+Photo galleries use the same manifest through front matter:
+
+```yaml
+coverAsset: "asset-id"
+images:
+  - asset: "asset-id"
+    alt: "Language-specific alternative text"
+    caption: "Language-specific caption"
+```

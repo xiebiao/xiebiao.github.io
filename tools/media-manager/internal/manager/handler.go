@@ -31,9 +31,11 @@ var managerUI []byte
 const maxUploadBytes = 50 << 20
 
 type ServerOptions struct {
-	Repository *Repository
-	Objects    ObjectStore
-	Manifest   string
+	Repository  *Repository
+	Objects     ObjectStore
+	Transformer ImageTransformer
+	Manifest    string
+	ContentRoot string
 }
 
 type server struct{ options ServerOptions }
@@ -41,6 +43,9 @@ type server struct{ options ServerOptions }
 func NewServer(options ServerOptions) (http.Handler, error) {
 	if options.Repository == nil || options.Objects == nil || options.Manifest == "" {
 		return nil, errors.New("repository, object store, and manifest are required")
+	}
+	if options.Transformer == nil {
+		options.Transformer = NewCloudflareTransformer(nil)
 	}
 	return securityHeaders(&server{options: options}), nil
 }
@@ -55,6 +60,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	case r.URL.Path == "/api/assets" && r.Method == http.MethodGet:
 		s.list(w, r)
+	case r.URL.Path == "/api/content" && r.Method == http.MethodGet:
+		s.content(w, r)
 	case r.URL.Path == "/api/assets" && r.Method == http.MethodPost:
 		s.upload(w, r)
 	case r.URL.Path == "/api/export" && r.Method == http.MethodPost:
@@ -70,6 +77,15 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	default:
 		writeError(w, http.StatusNotFound, "not found")
 	}
+}
+
+func (s *server) content(w http.ResponseWriter, r *http.Request) {
+	items, err := listHugoContent(s.options.ContentRoot, r.URL.Query().Get("q"))
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "cannot read Hugo content: "+err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, items)
 }
 
 func (s *server) importManifest(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +132,22 @@ func (s *server) importManifest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) asset(w http.ResponseWriter, r *http.Request) {
-	id := strings.Trim(strings.TrimPrefix(r.URL.Path, "/api/assets/"), "/")
+	path := strings.Trim(strings.TrimPrefix(r.URL.Path, "/api/assets/"), "/")
+	if strings.HasSuffix(path, "/variants") {
+		id := strings.TrimSuffix(path, "/variants")
+		if id == "" || strings.Contains(id, "/") {
+			writeError(w, http.StatusNotFound, "not found")
+			return
+		}
+		if r.Method != http.MethodPost {
+			w.Header().Set("Allow", "POST")
+			writeError(w, http.StatusMethodNotAllowed, "method not allowed")
+			return
+		}
+		s.regenerateVariants(w, r, id)
+		return
+	}
+	id := path
 	if id == "" || strings.Contains(id, "/") {
 		writeError(w, http.StatusNotFound, "not found")
 		return
@@ -174,6 +205,11 @@ func (s *server) asset(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		keys := []string{fmt.Sprintf("posts/%s/original.%s", asset.ID, extensionForMIME(asset.MIMEType))}
+		for _, variant := range asset.Variants {
+			if variant.Format == "webp" && variant.Key != "" {
+				keys = append(keys, variant.Key)
+			}
+		}
 		if err := s.options.Objects.Delete(r.Context(), keys); err != nil {
 			writeError(w, http.StatusBadGateway, "R2 delete failed; the catalog was left unchanged")
 			return
@@ -191,6 +227,41 @@ func (s *server) asset(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Allow", "GET, PATCH, DELETE")
 		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
 	}
+}
+
+func (s *server) regenerateVariants(w http.ResponseWriter, r *http.Request, id string) {
+	asset, err := s.options.Repository.Get(r.Context(), id)
+	if errors.Is(err, ErrNotFound) {
+		writeError(w, http.StatusNotFound, "asset not found")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	originalKey := fmt.Sprintf("posts/%s/original.%s", asset.ID, extensionForMIME(asset.MIMEType))
+	if _, err := s.options.Objects.Get(r.Context(), originalKey); err != nil {
+		writeError(w, http.StatusBadGateway, "cannot read original from R2: "+err.Error())
+		return
+	}
+	uploadedKeys := []string{}
+	variants, err := s.createWebPVariants(r.Context(), asset, originalKey, objectMetadata(asset), &uploadedKeys)
+	if err != nil {
+		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), uploadedKeys)
+		writeError(w, http.StatusBadGateway, "Cloudflare WebP generation failed; generated objects were rolled back: "+err.Error())
+		return
+	}
+	asset, err = s.options.Repository.ReplaceVariants(r.Context(), id, variants, time.Now().UTC().Format(time.RFC3339))
+	if err != nil {
+		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), uploadedKeys)
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := exportManifest(r.Context(), s.options.Repository, s.options.Manifest); err != nil {
+		writeError(w, http.StatusInternalServerError, "variants saved but manifest export failed: "+err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, asset)
 }
 
 func (s *server) list(w http.ResponseWriter, r *http.Request) {
@@ -255,9 +326,15 @@ func (s *server) upload(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadGateway, "R2 upload failed: "+err.Error())
 		return
 	}
-	asset.Variants = cloudflareVariants(s.options.Objects.URL(originalKey), originalKey, width, height)
+	uploadedKeys := []string{originalKey}
+	asset.Variants, err = s.createWebPVariants(r.Context(), asset, originalKey, metadata, &uploadedKeys)
+	if err != nil {
+		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), uploadedKeys)
+		writeError(w, http.StatusBadGateway, "Cloudflare WebP generation failed; uploaded objects were rolled back: "+err.Error())
+		return
+	}
 	if err := s.options.Repository.Create(r.Context(), asset); err != nil {
-		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), []string{originalKey})
+		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), uploadedKeys)
 		if errors.Is(err, ErrDuplicate) {
 			writeError(w, http.StatusConflict, "this image has already been uploaded")
 			return
@@ -364,24 +441,64 @@ func displayDimensions(r *http.Request, fallbackWidth, fallbackHeight int) (int,
 	return fallbackWidth, fallbackHeight
 }
 
-func cloudflareVariants(originalURL, originalKey string, sourceWidth, sourceHeight int) []Variant {
-	base := strings.TrimSuffix(originalURL, originalKey)
-	widths := []int{480, 960, 1440, 1920}
+func (s *server) createWebPVariants(ctx context.Context, asset Asset, originalKey string, metadata map[string]string, uploadedKeys *[]string) ([]Variant, error) {
+	originalURL := s.options.Objects.URL(originalKey)
+	widths := responsiveWidths(asset.Width)
 	variants := make([]Variant, 0, len(widths))
+	for _, width := range widths {
+		body, err := s.transformWebPWithRetry(ctx, originalURL, width)
+		if err != nil {
+			return nil, fmt.Errorf("width %d: %w", width, err)
+		}
+		height := max(1, int(float64(asset.Height)*float64(width)/float64(asset.Width)+0.5))
+		key := fmt.Sprintf("posts/%s/%d.webp", asset.ID, width)
+		if err := s.options.Objects.Put(ctx, Object{Key: key, Body: body, ContentType: "image/webp", Metadata: metadata}); err != nil {
+			return nil, fmt.Errorf("store width %d in R2: %w", width, err)
+		}
+		*uploadedKeys = append(*uploadedKeys, key)
+		variants = append(variants, Variant{
+			Width: width, Height: height, Format: "webp", Key: key,
+			URL: s.options.Objects.URL(key), Size: int64(len(body)),
+		})
+	}
+	return variants, nil
+}
+
+func responsiveWidths(sourceWidth int) []int {
+	widths := []int{480, 960, 1440, 1920}
+	result := make([]int, 0, len(widths))
 	for _, width := range widths {
 		if width >= sourceWidth {
 			width = sourceWidth
 		}
-		height := max(1, int(float64(sourceHeight)*float64(width)/float64(sourceWidth)+0.5))
-		variants = append(variants, Variant{
-			Width: width, Height: height, Format: "auto", Key: fmt.Sprintf("%s#width=%d", originalKey, width),
-			URL: fmt.Sprintf("%scdn-cgi/image/width=%d,quality=82,format=auto,fit=scale-down,onerror=redirect/%s", base, width, originalKey),
-		})
+		result = append(result, width)
 		if width == sourceWidth {
 			break
 		}
 	}
-	return variants
+	return result
+}
+
+func (s *server) transformWebPWithRetry(ctx context.Context, originalURL string, width int) ([]byte, error) {
+	var lastErr error
+	for attempt := 0; attempt < 3; attempt++ {
+		body, err := s.options.Transformer.TransformWebP(ctx, originalURL, width)
+		if err == nil {
+			return body, nil
+		}
+		lastErr = err
+		if attempt == 2 {
+			break
+		}
+		timer := time.NewTimer(time.Duration(250*(1<<attempt)) * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return nil, ctx.Err()
+		case <-timer.C:
+		}
+	}
+	return nil, lastErr
 }
 
 func securityHeaders(next http.Handler) http.Handler {

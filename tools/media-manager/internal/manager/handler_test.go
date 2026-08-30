@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -26,6 +27,19 @@ type failingObjects struct {
 	memoryObjects
 	putCount int
 	failAt   int
+}
+
+type fakeTransformer struct {
+	calls []int
+	fail  error
+}
+
+func (f *fakeTransformer) TransformWebP(_ context.Context, _ string, width int) ([]byte, error) {
+	f.calls = append(f.calls, width)
+	if f.fail != nil {
+		return nil, f.fail
+	}
+	return []byte("RIFF-webp-test"), nil
 }
 
 func (f *failingObjects) Put(ctx context.Context, object manager.Object) error {
@@ -132,6 +146,14 @@ func (m *memoryObjects) Put(_ context.Context, object manager.Object) error {
 	return nil
 }
 
+func (m *memoryObjects) Get(_ context.Context, key string) ([]byte, error) {
+	body, exists := m.objects[key]
+	if !exists {
+		return nil, manager.ErrNotFound
+	}
+	return append([]byte(nil), body...), nil
+}
+
 func (m *memoryObjects) Delete(_ context.Context, keys []string) error {
 	for _, key := range keys {
 		delete(m.objects, key)
@@ -151,10 +173,12 @@ func TestUserCanUploadAndRetrieveAnAsset(t *testing.T) {
 	t.Cleanup(func() { repo.Close() })
 
 	objects := &memoryObjects{}
+	transformer := &fakeTransformer{}
 	handler, err := manager.NewServer(manager.ServerOptions{
-		Repository: repo,
-		Objects:    objects,
-		Manifest:   filepath.Join(tmp, "assets.json"),
+		Repository:  repo,
+		Objects:     objects,
+		Transformer: transformer,
+		Manifest:    filepath.Join(tmp, "assets.json"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -190,11 +214,14 @@ func TestUserCanUploadAndRetrieveAnAsset(t *testing.T) {
 	if len(assets) != 1 {
 		t.Fatalf("got %d assets, want 1", len(assets))
 	}
-	if assets[0].Alt != "青海的田野" || !strings.Contains(assets[0].Variants[0].URL, "/cdn-cgi/image/width=1,quality=82,format=auto,fit=scale-down,onerror=redirect/") {
+	if assets[0].Alt != "青海的田野" || assets[0].Variants[0].Format != "webp" || !strings.HasSuffix(assets[0].Variants[0].URL, "/1.webp") {
 		t.Fatalf("unexpected asset: %+v", assets[0])
 	}
-	if len(objects.objects) != 1 {
-		t.Fatalf("R2 objects = %d, want one original", len(objects.objects))
+	if len(objects.objects) != 2 {
+		t.Fatalf("R2 objects = %d, want original plus one WebP", len(objects.objects))
+	}
+	if len(transformer.calls) != 1 || transformer.calls[0] != 1 {
+		t.Fatalf("transform widths = %v, want [1]", transformer.calls)
 	}
 }
 
@@ -231,8 +258,8 @@ func TestPartialR2UploadIsRolledBack(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	objects := &failingObjects{failAt: 1}
-	handler, err := manager.NewServer(manager.ServerOptions{Repository: repo, Objects: objects, Manifest: filepath.Join(tmp, "assets.json")})
+	objects := &failingObjects{failAt: 2}
+	handler, err := manager.NewServer(manager.ServerOptions{Repository: repo, Objects: objects, Transformer: &fakeTransformer{}, Manifest: filepath.Join(tmp, "assets.json")})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -268,7 +295,7 @@ func TestDuplicateImageIsRejectedWithoutLeavingNewObjects(t *testing.T) {
 		t.Fatal(err)
 	}
 	objects := &memoryObjects{}
-	handler, err := manager.NewServer(manager.ServerOptions{Repository: repo, Objects: objects, Manifest: filepath.Join(tmp, "assets.json")})
+	handler, err := manager.NewServer(manager.ServerOptions{Repository: repo, Objects: objects, Transformer: &fakeTransformer{}, Manifest: filepath.Join(tmp, "assets.json")})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -298,6 +325,81 @@ func TestDuplicateImageIsRejectedWithoutLeavingNewObjects(t *testing.T) {
 	}
 }
 
+func TestCloudflareTransformerRequestsWebPOnce(t *testing.T) {
+	t.Parallel()
+	var requestedPath string
+	client := &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
+		requestedPath = request.URL.EscapedPath()
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Status:     "200 OK",
+			Header:     http.Header{"Content-Type": []string{"image/webp"}},
+			Body:       io.NopCloser(strings.NewReader("RIFF-webp")),
+		}, nil
+	})}
+
+	transformer := manager.NewCloudflareTransformer(client)
+	body, err := transformer.TransformWebP(context.Background(), "https://media.example/posts/asset/original.jpeg", 960)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(body) != "RIFF-webp" {
+		t.Fatalf("body = %q", body)
+	}
+	want := "/cdn-cgi/image/width=960,quality=82,format=webp,fit=scale-down/posts/asset/original.jpeg"
+	if requestedPath != want {
+		t.Fatalf("transform path = %q, want %q", requestedPath, want)
+	}
+}
+
+func TestLegacyAssetCanStoreWebPVariantsInR2(t *testing.T) {
+	t.Parallel()
+	tmp := t.TempDir()
+	repo, err := manager.OpenRepository(filepath.Join(tmp, "media.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	asset := manager.Asset{
+		ID: "legacy", Filename: "field.jpg", MIMEType: "image/jpeg", Checksum: "legacy-checksum",
+		Width: 1200, Height: 800, Alt: "田野", Tags: []string{}, ArticleRefs: []string{},
+		CreatedAt: "2026-08-29T12:00:00Z", UpdatedAt: "2026-08-29T12:00:00Z",
+		Variants: []manager.Variant{{
+			Width: 480, Height: 320, Format: "auto", Key: "posts/legacy/original.jpeg#width=480",
+			URL: "https://media.example/cdn-cgi/image/width=480/posts/legacy/original.jpeg",
+		}},
+	}
+	if err := repo.Create(context.Background(), asset); err != nil {
+		t.Fatal(err)
+	}
+	objects := &memoryObjects{}
+	if err := objects.Put(context.Background(), manager.Object{Key: "posts/legacy/original.jpeg", Body: []byte("original"), ContentType: "image/jpeg"}); err != nil {
+		t.Fatal(err)
+	}
+	transformer := &fakeTransformer{}
+	handler, err := manager.NewServer(manager.ServerOptions{
+		Repository: repo, Objects: objects, Transformer: transformer, Manifest: filepath.Join(tmp, "assets.json"),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, httptest.NewRequest(http.MethodPost, "/api/assets/legacy/variants", nil))
+	if response.Code != http.StatusOK {
+		t.Fatalf("regenerate status = %d, body = %s", response.Code, response.Body.String())
+	}
+	updated, err := repo.Get(context.Background(), "legacy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(updated.Variants) != 3 || updated.Variants[0].Format != "webp" || updated.Variants[2].Width != 1200 {
+		t.Fatalf("unexpected variants: %+v", updated.Variants)
+	}
+	if len(objects.objects) != 4 {
+		t.Fatalf("R2 objects = %d, want original plus three WebP files", len(objects.objects))
+	}
+}
+
 func TestUserCanRestoreCatalogFromExportedManifest(t *testing.T) {
 	t.Parallel()
 	tmp := t.TempDir()
@@ -321,5 +423,61 @@ func TestUserCanRestoreCatalogFromExportedManifest(t *testing.T) {
 	handler.ServeHTTP(get, httptest.NewRequest(http.MethodGet, "/api/assets/restored", nil))
 	if get.Code != http.StatusOK || !strings.Contains(get.Body.String(), "恢复的图片") {
 		t.Fatalf("restored GET status = %d, body = %s", get.Code, get.Body.String())
+	}
+}
+
+func TestContentEndpointListsPostsAndPhotosByStableReference(t *testing.T) {
+	t.Parallel()
+	tmp := t.TempDir()
+	contentRoot := filepath.Join(tmp, "content")
+	writeContent := func(relative, body string) {
+		path := filepath.Join(contentRoot, relative)
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeContent("posts/story.en.md", "---\ntitle: \"A Story\"\n---\n")
+	writeContent("posts/story.zh.md", "---\ntitle: \"一篇文章\"\n---\n")
+	writeContent("photos/travel/index.zh.md", "---\ntitle: '旅行影集'\n---\n")
+	writeContent("photos/draft.zh.md", "---\ntitle: \"草稿\"\ndraft: true\n---\n")
+	writeContent("posts/_index.zh.md", "---\ntitle: \"文章\"\n---\n")
+
+	repo, err := manager.OpenRepository(filepath.Join(tmp, "media.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	handler, err := manager.NewServer(manager.ServerOptions{
+		Repository: repo, Objects: &memoryObjects{}, Manifest: filepath.Join(tmp, "assets.json"), ContentRoot: contentRoot,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, httptest.NewRequest(http.MethodGet, "/api/content", nil))
+	if response.Code != http.StatusOK {
+		t.Fatalf("content status = %d, body = %s", response.Code, response.Body.String())
+	}
+	var items []manager.ContentItem
+	if err := json.Unmarshal(response.Body.Bytes(), &items); err != nil {
+		t.Fatal(err)
+	}
+	if len(items) != 2 {
+		t.Fatalf("content items = %d, want 2: %+v", len(items), items)
+	}
+	if items[0].Ref != "photos/travel" || items[0].Title != "旅行影集" {
+		t.Fatalf("unexpected photo item: %+v", items[0])
+	}
+	if items[1].Ref != "posts/story" || items[1].Title != "一篇文章" || strings.Join(items[1].Languages, ",") != "en,zh" {
+		t.Fatalf("unexpected post item: %+v", items[1])
+	}
+
+	filtered := httptest.NewRecorder()
+	handler.ServeHTTP(filtered, httptest.NewRequest(http.MethodGet, "/api/content?q=Story", nil))
+	if filtered.Code != http.StatusOK || !strings.Contains(filtered.Body.String(), "posts/story") || strings.Contains(filtered.Body.String(), "photos/travel") {
+		t.Fatalf("unexpected filtered content: %s", filtered.Body.String())
 	}
 }

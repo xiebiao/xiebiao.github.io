@@ -1,6 +1,6 @@
 # R2 Media Manager
 
-Local-only image catalog and uploader for Hugo posts. The service always binds to `127.0.0.1`, stores its catalog in SQLite, uploads one immutable original to R2, and exports Cloudflare Images transformation URLs to `../../data/media/assets.json` for Hugo.
+Local-only image catalog and uploader for Hugo posts. The service always binds to `127.0.0.1`, stores its catalog in SQLite, uploads one immutable original to R2, asks Cloudflare Images to generate responsive WebP files once, stores those files permanently in R2, and exports their direct URLs to `../../data/media/assets.json` for Hugo.
 
 ## Prerequisites
 
@@ -25,18 +25,23 @@ set +a
 go run ./cmd/media-manager
 ```
 
-Open <http://127.0.0.1:7331>. Image resizing and format negotiation happen at Cloudflare's edge, so the local service has no CGO or third-party Go dependencies.
+Open <http://127.0.0.1:7331>. Image resizing and WebP encoding happen through Cloudflare Image Transformations during upload. The resulting files are downloaded and written back to R2, so the local service has no CGO, `libvips`, or third-party Go dependencies.
+
+The manager scans `../../content/posts` and `../../content/photos` through `GET /api/content`. Translations with the same source basename are merged into one stable reference, such as `posts/my-post` or `photos/my-gallery`, and can be selected when uploading or editing an asset. Override the Hugo content directory with `MEDIA_CONTENT` when starting the service from another layout.
 
 ## Object and metadata model
 
 - Original: `posts/{asset-id}/original.{ext}`
-- Transform URLs: `/cdn-cgi/image/width={width},quality=82,format=auto,fit=scale-down,onerror=redirect/{original}`
-- Default widths: 480, 960, 1440, and 1920 pixels, never requesting beyond the source width
-- R2 originals use `If-None-Match: *` plus one-year immutable cache headers
+- Responsive files: `posts/{asset-id}/{width}.webp`
+- Default widths: 480, 960, 1440, and 1920 pixels, never generating beyond the source width
+- Each width uses one Cloudflare Image Transformation when the asset is uploaded; normal site traffic reads the stored WebP directly from R2
+- R2 originals and WebP variants use `If-None-Match: *` plus one-year immutable cache headers
 - SQLite is the complete metadata source; R2 custom metadata stores the asset ID, checksum, filename, alt, and caption
 - The JSON export is keyed by asset ID and is safe to commit
 
-`onerror=redirect` falls back to the original R2 object if a transformation fails or the monthly free transformation limit is exhausted.
+If transformation or R2 storage fails, the upload is rejected and every object written for that attempt is rolled back. No dynamic transformation URL is exported to Hugo.
+
+Assets created by an older version may still contain dynamic `format=auto` URLs. Use **生成并存储 WebP** on the asset card to generate the fixed R2 objects and replace those legacy manifest entries.
 
 Use the copied shortcode in a post:
 

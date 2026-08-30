@@ -58,6 +58,11 @@ type Object struct {
 
 type ObjectStore interface {
 	Put(context.Context, Object) error
+	Get(context.Context, string) ([]byte, error)
 	Delete(context.Context, []string) error
 	URL(string) string
+}
+
+type ImageTransformer interface {
+	TransformWebP(context.Context, string, int) ([]byte, error)
 }

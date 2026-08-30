@@ -1272,7 +1272,7 @@ figcaption {
 
 .photo-story-header {
   width: min(100%, 760px);
-  margin: 0 auto clamp(3rem, 8vw, 6rem);
+  margin: clamp(3rem, 8vw, 6rem) auto 0;
   text-align: center;
 }
 

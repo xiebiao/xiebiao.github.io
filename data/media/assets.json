@@ -1,1 +1,98 @@
-{}
+{
+  "49d87493-cc4b-4f0c-820e-07faa01ece70": {
+    "id": "49d87493-cc4b-4f0c-820e-07faa01ece70",
+    "filename": "blog-photo-1920w.jpg",
+    "mimeType": "image/jpeg",
+    "checksum": "b0baf6b52cdb9e7487d62ba26c499635c04c9b027fae8dee1b58ccd9e73b3aad",
+    "width": 1440,
+    "height": 1920,
+    "alt": "中国·新疆·昭苏玉湖",
+    "caption": "",
+    "location": "二零二五·八月·中国·新疆·昭苏玉湖",
+    "copyright": "Bill Xie",
+    "tags": [],
+    "articleRefs": [
+      "photos/xingjiang-zhaosu"
+    ],
+    "variants": [
+      {
+        "width": 480,
+        "height": 640,
+        "format": "webp",
+        "key": "posts/49d87493-cc4b-4f0c-820e-07faa01ece70/480.webp",
+        "url": "https://media.xiebiao.com/posts/49d87493-cc4b-4f0c-820e-07faa01ece70/480.webp",
+        "size": 73006
+      },
+      {
+        "width": 960,
+        "height": 1280,
+        "format": "webp",
+        "key": "posts/49d87493-cc4b-4f0c-820e-07faa01ece70/960.webp",
+        "url": "https://media.xiebiao.com/posts/49d87493-cc4b-4f0c-820e-07faa01ece70/960.webp",
+        "size": 289248
+      },
+      {
+        "width": 1440,
+        "height": 1920,
+        "format": "webp",
+        "key": "posts/49d87493-cc4b-4f0c-820e-07faa01ece70/1440.webp",
+        "url": "https://media.xiebiao.com/posts/49d87493-cc4b-4f0c-820e-07faa01ece70/1440.webp",
+        "size": 611672
+      }
+    ],
+    "createdAt": "2026-08-30T09:03:38Z",
+    "updatedAt": "2026-08-30T09:12:45Z"
+  },
+  "89a9986b-b8f4-452c-9472-b18669bb0a11": {
+    "id": "89a9986b-b8f4-452c-9472-b18669bb0a11",
+    "filename": "origin.jpg",
+    "mimeType": "image/jpeg",
+    "checksum": "91a2541aef35ad8062414cae5a663b2bf820c86acd1714ae9f4fa120dd80b41f",
+    "width": 4032,
+    "height": 3024,
+    "alt": "二零二五·八月·中国·黑独山",
+    "caption": "",
+    "location": "二零二五·八月·中国·青海·茫崖冷湖",
+    "copyright": "Bill Xie",
+    "tags": [],
+    "articleRefs": [
+      "photos/qinghai"
+    ],
+    "variants": [
+      {
+        "width": 480,
+        "height": 360,
+        "format": "webp",
+        "key": "posts/89a9986b-b8f4-452c-9472-b18669bb0a11/480.webp",
+        "url": "https://media.xiebiao.com/posts/89a9986b-b8f4-452c-9472-b18669bb0a11/480.webp",
+        "size": 25440
+      },
+      {
+        "width": 960,
+        "height": 720,
+        "format": "webp",
+        "key": "posts/89a9986b-b8f4-452c-9472-b18669bb0a11/960.webp",
+        "url": "https://media.xiebiao.com/posts/89a9986b-b8f4-452c-9472-b18669bb0a11/960.webp",
+        "size": 88072
+      },
+      {
+        "width": 1440,
+        "height": 1080,
+        "format": "webp",
+        "key": "posts/89a9986b-b8f4-452c-9472-b18669bb0a11/1440.webp",
+        "url": "https://media.xiebiao.com/posts/89a9986b-b8f4-452c-9472-b18669bb0a11/1440.webp",
+        "size": 188372
+      },
+      {
+        "width": 1920,
+        "height": 1440,
+        "format": "webp",
+        "key": "posts/89a9986b-b8f4-452c-9472-b18669bb0a11/1920.webp",
+        "url": "https://media.xiebiao.com/posts/89a9986b-b8f4-452c-9472-b18669bb0a11/1920.webp",
+        "size": 309918
+      }
+    ],
+    "createdAt": "2026-08-30T04:14:13Z",
+    "updatedAt": "2026-08-30T09:10:31Z"
+  }
+}
