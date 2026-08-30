@@ -2,6 +2,7 @@
 {{ $destinations := .destinations }}
 {{ $hasDestinations := gt (len $destinations) 0 }}
 {{ $sizes := .sizes | default "(max-width: 900px) calc(100vw - 2rem), 1200px" }}
+{{ $maxWidth := .maxWidth | default 0 }}
 {{ $asset := false }}
 {{ $location := $image.location | default .location }}
 {{ $date := .date }}
@@ -19,6 +20,10 @@
 {{ end }}
 {{ if $asset }}
   {{ $variants := sort $asset.variants "width" "asc" }}
+  {{ if gt $maxWidth 0 }}
+    {{ $limitedVariants := where $variants "width" "le" $maxWidth }}
+    {{ if gt (len $limitedVariants) 0 }}{{ $variants = $limitedVariants }}{{ end }}
+  {{ end }}
   {{ $fallback := index (last 1 $variants) 0 }}
   <img
     src="{{ $fallback.url }}"

@@ -1295,7 +1295,7 @@ figcaption {
 .photo-story-intro {
   margin-top: 2.5rem;
   color: #666;
-  font-size: 1.125rem;
+  font-size: inherit;
   line-height: 1.9;
 }
 
@@ -1304,6 +1304,10 @@ figcaption {
   gap: clamp(3rem, 8vw, 7rem);
   width: min(100%, 1200px);
   margin: 0 auto;
+}
+
+.photo-latest-page .photo-story-gallery {
+  width: min(100%, 960px);
 }
 
 .photo-single-page .photo-story-gallery {
