@@ -1311,6 +1311,26 @@ figcaption {
   margin: 0 auto;
 }
 
+.photo-single-page .photo-story-gallery {
+  width: min(100%, 960px);
+}
+
+.photo-single-page .photo-story-frame {
+  width: 100%;
+  max-width: 960px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.photo-single-page .photo-story-frame img {
+  width: auto;
+  max-width: 100%;
+  max-height: min(78vh, 900px);
+  margin-right: auto;
+  margin-left: auto;
+  object-fit: contain;
+}
+
 .photo-story-frame {
   width: 100%;
   max-width: none;
