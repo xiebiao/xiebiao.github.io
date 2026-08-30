@@ -1,5 +1,5 @@
 ---
-title: "青海，冷湖"
+# title: "青海，冷湖"
 slug: "qinghai-lenghu"
 date: 2025-08-01
 description: "荒原、收获后的田野，以及八月高处的天空。"

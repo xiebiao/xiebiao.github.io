@@ -16,16 +16,12 @@
     <div class="photo-story-gallery">
       {{ range $index, $image := $latest.Params.images }}
       <figure class="photo-story-frame">
-        {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" (eq $index 0)) }}
+        {{ partial "photo-image.html" (dict "image" $image "location" $latest.Params.location "date" ($latest.Date | time.Format ":date_long") "dateISO" ($latest.Date.Format "2006-01-02") "destinations" $destinations "eager" (eq $index 0)) }}
       </figure>
       {{ end }}
     </div>
     <header class="photo-story-header">
       <h1 id="page-heading"><a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></h1>
-      <div class="photo-story-meta">
-        {{ with $latest.Params.location }}<span>{{ . }}</span>{{ end }}
-        <time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date | time.Format ":date_long" }}</time>
-      </div>
       {{ with $latest.Content }}<div class="photo-story-intro">{{ . }}</div>{{ end }}
     </header>
   </article>

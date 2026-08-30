@@ -69,13 +69,10 @@
 
     <nav class="home-module-nav" aria-label="{{ i18n "navigationAria" }}">
       <a href="{{ "projects/" | relLangURL }}">{{ i18n "projectsLabel" }}</a>
-      <a href="{{ "posts/" | relLangURL }}">{{ i18n "postsLabel" }}</a>
-      <a href="{{ "photos/" | relLangURL }}">{{ i18n "photosLabel" }}</a>
+      <a href="{{ partial "posts-url.html" . }}">{{ i18n "postsLabel" }}</a>
+      <a href="{{ partial "photos-url.html" . }}">{{ i18n "photosLabel" }}</a>
     </nav>
 
-    <footer class="home-copyright">
-      <small>&copy; {{ now.Year }} www.xiebiao.com</small>
-    </footer>
   </section>
 </main>
 {{ end }}

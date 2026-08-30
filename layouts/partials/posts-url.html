@@ -1,0 +1,9 @@
+{{- $postsURL := "posts/" | relLangURL -}}
+{{- range hugo.Sites -}}
+  {{- if eq .Language.Lang "zh" -}}
+    {{- with (.GetPage "/posts") -}}
+      {{- $postsURL = .RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $postsURL -}}

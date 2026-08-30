@@ -9,17 +9,13 @@
   <div class="photo-story-gallery">
     {{ range $image := .Params.images }}
     <figure class="photo-story-frame">
-      {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" false "sizes" "(max-width: 760px) calc(100vw - 2rem), 960px") }}
+      {{ partial "photo-image.html" (dict "image" $image "location" $.Params.location "date" ($.Date | time.Format ":date_long") "dateISO" ($.Date.Format "2006-01-02") "destinations" $destinations "eager" false "sizes" "(max-width: 760px) calc(100vw - 2rem), 960px") }}
     </figure>
     {{ end }}
   </div>
   <header class="photo-story-header">
     <p class="module-back"><a href="{{ "photos/" | relLangURL }}">{{ i18n "photoBack" }}</a></p>
     <h1>{{ .Title }}</h1>
-    <div class="photo-story-meta">
-      {{ with .Params.location }}<span>{{ . }}</span>{{ end }}
-      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
-    </div>
     {{ with .Content }}<div class="photo-story-intro">{{ . }}</div>{{ end }}
   </header>
 </main>

@@ -3,11 +3,12 @@
 {{ $hasDestinations := gt (len $destinations) 0 }}
 {{ $sizes := .sizes | default "(max-width: 900px) calc(100vw - 2rem), 1200px" }}
 {{ $asset := false }}
-{{ $caption := $image.caption }}
+{{ $location := $image.location | default .location }}
+{{ $date := .date }}
+{{ $dateISO := .dateISO }}
 {{ with $image.asset }}
   {{ $asset = index hugo.Data.media.assets . }}
   {{ if not $asset }}{{ errorf "unknown photo media asset %q" . }}{{ end }}
-  {{ if and $asset (not $caption) }}{{ $caption = $asset.caption }}{{ end }}
 {{ end }}
 {{ if $hasDestinations }}
 <a
@@ -40,4 +41,9 @@
 {{ if $hasDestinations }}
 </a>
 {{ end }}
-{{ with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+{{ if or $location $date }}
+<figcaption>
+  {{ with $location }}<span class="photo-story-location">{{ . }}</span>{{ end }}
+  {{ with $date }}<time class="photo-story-date" datetime="{{ $dateISO }}">{{ . }}</time>{{ end }}
+</figcaption>
+{{ end }}

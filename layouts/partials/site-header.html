@@ -9,6 +9,11 @@
   {{ range hugo.Sites }}
     {{ if eq .Language.Lang $targetLanguage }}
       {{ $targetURL = .Home.RelPermalink }}
+      {{ if $.Section }}
+        {{ with (.GetPage (printf "/%s" $.Section)) }}
+          {{ $targetURL = .RelPermalink }}
+        {{ end }}
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}

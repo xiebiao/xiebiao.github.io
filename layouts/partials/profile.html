@@ -14,10 +14,10 @@
     <a class="project-link{{ if eq .Section "projects" }} is-active{{ end }}" href="{{ "projects/" | relLangURL }}">
       <span class="project-link-title"><span class="project-name">{{ i18n "projectsLabel" }}</span></span>
     </a>
-    <a class="project-link{{ if eq .Section "posts" }} is-active{{ end }}" href="{{ "posts/" | relLangURL }}">
+    <a class="project-link{{ if eq .Section "posts" }} is-active{{ end }}" href="{{ partial "posts-url.html" . }}">
       <span class="project-link-title"><span class="project-name">{{ i18n "postsLabel" }}</span></span>
     </a>
-    <a class="project-link{{ if eq .Section "photos" }} is-active{{ end }}" href="{{ "photos/" | relLangURL }}">
+    <a class="project-link{{ if eq .Section "photos" }} is-active{{ end }}" href="{{ partial "photos-url.html" . }}">
       <span class="project-link-title"><span class="project-name">{{ i18n "photosLabel" }}</span></span>
     </a>
   </nav>

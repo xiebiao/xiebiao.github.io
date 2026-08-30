@@ -1,0 +1,9 @@
+{{- $photosURL := "photos/" | relLangURL -}}
+{{- range hugo.Sites -}}
+  {{- if eq .Language.Lang "zh" -}}
+    {{- with (.GetPage "/photos") -}}
+      {{- $photosURL = .RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $photosURL -}}
