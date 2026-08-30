@@ -1,0 +1,31 @@
+{{ define "main" }}
+{{ $destinations := slice }}
+{{ range where site.RegularPages "Section" "photos" }}
+  {{ if ne .RelPermalink $.RelPermalink }}
+    {{ $destinations = $destinations | append .RelPermalink }}
+  {{ end }}
+{{ end }}
+<main class="photo-story">
+  <header class="photo-story-header">
+    <p class="module-back"><a href="{{ "photos/" | relLangURL }}">{{ i18n "photoBack" }}</a></p>
+    <h1>{{ .Title }}</h1>
+    <div class="photo-story-meta">
+      {{ with .Params.location }}<span>{{ . }}</span>{{ end }}
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+    </div>
+    {{ with .Content }}<div class="photo-story-intro">{{ . }}</div>{{ end }}
+  </header>
+  <div class="photo-story-gallery">
+    {{ range $image := .Params.images }}
+    <figure class="photo-story-frame">
+      {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" false) }}
+      {{ with $image.caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+    </figure>
+    {{ end }}
+  </div>
+</main>
+{{ end }}
+
+{{ define "head" }}
+  <script src="{{ "photo-random.js" | relURL }}" defer></script>
+{{ end }}

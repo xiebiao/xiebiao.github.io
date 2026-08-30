@@ -1,0 +1,19 @@
+{{ $targetLanguage := cond (eq site.Language.Lang "zh") "en" "zh" }}
+{{ $targetURL := "" }}
+{{ range .Translations }}
+  {{ if eq .Language.Lang $targetLanguage }}
+    {{ $targetURL = .RelPermalink }}
+  {{ end }}
+{{ end }}
+{{ if not $targetURL }}
+  {{ range hugo.Sites }}
+    {{ if eq .Language.Lang $targetLanguage }}
+      {{ $targetURL = .Home.RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+<header class="site-header">
+  <a class="language-toggle" href="{{ $targetURL }}" hreflang="{{ $targetLanguage }}" aria-label="{{ i18n "switchLanguage" }}">
+    {{ i18n "switchLanguageLabel" }}
+  </a>
+</header>

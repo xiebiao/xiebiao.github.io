@@ -1,0 +1,21 @@
+{{ $image := .image }}
+{{ $destinations := .destinations }}
+{{ $hasDestinations := gt (len $destinations) 0 }}
+{{ if $hasDestinations }}
+<a
+  class="photo-random-link"
+  href="{{ index $destinations 0 }}"
+  data-photo-destinations="{{ $destinations | jsonify }}"
+  aria-label="{{ i18n "randomPhotoAria" }}">
+{{ end }}
+  <img
+    src="{{ $image.src | relURL }}"
+    {{ with $image.srcset }}srcset="{{ range $sourceIndex, $source := . }}{{ if $sourceIndex }}, {{ end }}{{ $source.src | relURL }} {{ $source.width }}w{{ end }}"{{ end }}
+    sizes="(max-width: 900px) calc(100vw - 2rem), 1200px"
+    alt="{{ $image.alt }}"
+    width="{{ $image.width }}"
+    height="{{ $image.height }}"
+    {{ if .eager }}fetchpriority="high"{{ else }}loading="lazy"{{ end }}>
+{{ if $hasDestinations }}
+</a>
+{{ end }}

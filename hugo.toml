@@ -1,0 +1,42 @@
+baseURL = "https://xiebiao.com/"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+enableRobotsTXT = true
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[params]
+  author = "Bill Xie"
+  mediaBaseURL = "https://media.xiebiao.com"
+
+[languages]
+  [languages.zh]
+    label = "中文"
+    locale = "zh-CN"
+    title = "于川海"
+    weight = 2
+    [languages.zh.params]
+      description = "于川海（Bill Xie）的个人网站，记录摄影、诗歌与独立作品，包括运动训练计时器 PushBeat。"
+      ogLocale = "zh_CN"
+  [languages.en]
+    label = "English"
+    locale = "en-US"
+    title = "Bill Xie"
+    weight = 1
+    [languages.en.params]
+      description = "Bill Xie's personal website about photography, poetry, independent software, and PushBeat."
+      ogLocale = "en_US"
+
+[permalinks]
+  posts = "/posts/:slug/"
+  projects = "/projects/:slug/"
+  photos = "/photos/:slug/"
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+[markup.goldmark.renderer]
+  unsafe = false

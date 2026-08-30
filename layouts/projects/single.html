@@ -1,0 +1,23 @@
+{{ define "main" }}
+<main class="site-layout project-module-layout">
+  {{ partial "profile.html" . }}
+  <article class="project-content project-detail">
+    <p class="module-back"><a href="{{ "projects/" | relLangURL }}">{{ i18n "projectBack" }}</a></p>
+    <header class="project-detail-header">
+      <div class="project-detail-title">
+        {{ with .Params.logo }}<img src="{{ . | relURL }}" alt="" width="72" height="72">{{ end }}
+        <h1>{{ .Title }}</h1>
+      </div>
+      {{ with .Description }}<p class="project-detail-lead">{{ . }}</p>{{ end }}
+      <dl class="project-detail-meta">
+        {{ with .Params.status }}<div><dt>{{ i18n "statusLabel" }}</dt><dd>{{ . }}</dd></div>{{ end }}
+        {{ with .Params.platforms }}<div><dt>{{ i18n "platformLabel" }}</dt><dd>{{ . }}</dd></div>{{ end }}
+      </dl>
+      {{ with .Params.externalurl }}
+      <a class="project-external-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ i18n "visitProject" }}</a>
+      {{ end }}
+    </header>
+    <div class="article-body project-detail-body">{{ .Content }}</div>
+  </article>
+</main>
+{{ end }}

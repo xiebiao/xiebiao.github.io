@@ -1,0 +1,21 @@
+{{ define "main" }}
+<main class="site-layout article-layout taxonomy-layout">
+  {{ partial "posts-sidebar.html" . }}
+  <section class="project-content article-index" aria-labelledby="page-heading">
+    <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
+      {{ partial "home-logo.html" . }}
+    </nav>
+    <header class="article-header">
+      <h1 id="page-heading">{{ .Title }}</h1>
+    </header>
+    <div class="taxonomy-term-list">
+      {{ range .Data.Terms.ByCount }}
+      <a class="taxonomy-term-card" href="{{ .Page.RelPermalink }}">
+        <span>{{ .Page.LinkTitle }}</span>
+        <small>{{ .Count }}</small>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+</main>
+{{ end }}

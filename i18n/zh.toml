@@ -1,0 +1,131 @@
+[profileName]
+other = "于川海"
+
+[homeIntro]
+other = "我是一名独立软件开发者，生活在中国。"
+
+[profileAria]
+other = "个人信息"
+
+[navigationAria]
+other = "导航"
+
+[projectsLabel]
+other = "项目"
+
+[contentLabel]
+other = "内容"
+
+[postsSidebarAria]
+other = "文章分类与标签"
+
+[postsTaxonomiesAria]
+other = "浏览文章"
+
+[categoriesLabel]
+other = "分类"
+
+[tagsLabel]
+other = "标签"
+
+[emptyCategories]
+other = "暂无分类"
+
+[emptyTags]
+other = "暂无标签"
+
+[pushbeatDescription]
+other = "训练计时器"
+
+[postsLabel]
+other = "文章"
+
+[photosLabel]
+other = "摄影"
+
+[postsBack]
+other = "← 文章"
+
+[emptyPosts]
+other = "文章正在整理中。"
+
+[emptyProjects]
+other = "项目正在整理中。"
+
+[emptyPhotos]
+other = "照片正在整理中。"
+
+[projectBack]
+other = "← 项目"
+
+[photoBack]
+other = "← 摄影"
+
+[statusLabel]
+other = "状态"
+
+[platformLabel]
+other = "平台"
+
+[visitProject]
+other = "访问项目 ↗"
+
+[viewProject]
+other = "查看项目"
+
+[viewPhotoStory]
+other = "查看影集"
+
+[randomPhotoAria]
+other = "随机查看另一篇摄影文章"
+
+[switchLanguage]
+other = "Switch to English"
+
+[switchLanguageLabel]
+other = "English"
+
+[nextPhoto]
+other = "查看下一张照片"
+
+[previousPhoto]
+other = "返回上一张照片"
+
+[secondPhotoAlt]
+other = "收获后的田野与白桦林"
+
+[subtitle]
+other = "二零二五·八月·中国·青海茫崖冷湖"
+
+[poemLine1]
+other = "傍晚"
+
+[poemLine2]
+other = "躺在丰收后的油菜地里"
+
+[poemLine3]
+other = "仰望着故乡的天空"
+
+[poemLine4]
+other = "有几只飞鸟"
+
+[poemLine5]
+other = "吃掉了刚刚升起的星星"
+
+[poemLine6]
+other = "那一夜"
+
+[poemLine7]
+other = "睡得很深，深到土里"
+
+[quoteLine1]
+other = "世界上只有一种真正的英雄主义"
+
+[quoteLine2]
+other = "那就是在认清生活的真相之后"
+
+[quoteLine3]
+other = "依然热爱生活"
+
+[quoteAuthor]
+other = "—— 罗曼·罗兰"

@@ -1,0 +1,45 @@
+{{ define "main" }}
+<main class="project-index-layout">
+  <nav class="project-index-topbar" aria-label="{{ i18n "navigationAria" }}">
+    {{ partial "home-logo.html" . }}
+  </nav>
+  <section class="project-content project-archive" aria-labelledby="page-heading">
+    <header class="module-header project-module-header">
+      <h1 id="page-heading">{{ .Title }}</h1>
+      {{ with .Content }}<div class="module-intro">{{ . }}</div>{{ end }}
+    </header>
+    <div class="project-card-grid">
+      {{ range .Pages.ByWeight }}
+      {{ $projectURL := .RelPermalink }}
+      {{ $isExternal := false }}
+      {{ with .Params.externalurl }}
+        {{ $projectURL = . }}
+        {{ $isExternal = true }}
+      {{ end }}
+      <article class="project-card">
+        <a class="project-card-link" href="{{ $projectURL }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
+          <div class="project-card-topline">
+            <div class="project-card-identity">
+              {{ with .Params.logo }}
+              <span class="project-card-mark"><img src="{{ . | relURL }}" alt="" width="64" height="64"></span>
+              {{ end }}
+              <h2>{{ .Title }}</h2>
+            </div>
+            {{ with .Params.status }}<span class="project-card-status">{{ . }}</span>{{ end }}
+          </div>
+          <div class="project-card-copy">
+            {{ with .Description }}<p>{{ . }}</p>{{ end }}
+          </div>
+          <footer class="project-card-footer">
+            {{ with .Params.platforms }}<span class="project-card-platforms">{{ . }}</span>{{ end }}
+            <span class="module-text-link">{{ i18n "viewProject" }} →</span>
+          </footer>
+        </a>
+      </article>
+      {{ else }}
+      <p class="empty-state">{{ i18n "emptyProjects" }}</p>
+      {{ end }}
+    </div>
+  </section>
+</main>
+{{ end }}

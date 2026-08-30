@@ -1,0 +1,131 @@
+[profileName]
+other = "Bill Xie"
+
+[homeIntro]
+other = "I'm an indie software engineer, and I live in China."
+
+[profileAria]
+other = "Personal information"
+
+[navigationAria]
+other = "Navigation"
+
+[projectsLabel]
+other = "Projects"
+
+[contentLabel]
+other = "Content"
+
+[postsSidebarAria]
+other = "Post categories and tags"
+
+[postsTaxonomiesAria]
+other = "Browse posts"
+
+[categoriesLabel]
+other = "Categories"
+
+[tagsLabel]
+other = "Tags"
+
+[emptyCategories]
+other = "No categories yet."
+
+[emptyTags]
+other = "No tags yet."
+
+[pushbeatDescription]
+other = "Fitness Timer"
+
+[postsLabel]
+other = "Posts"
+
+[photosLabel]
+other = "Photos"
+
+[postsBack]
+other = "← Writing"
+
+[emptyPosts]
+other = "Articles are on the way."
+
+[emptyProjects]
+other = "Projects are on the way."
+
+[emptyPhotos]
+other = "Photo stories are on the way."
+
+[projectBack]
+other = "← Projects"
+
+[photoBack]
+other = "← Photography"
+
+[statusLabel]
+other = "Status"
+
+[platformLabel]
+other = "Platforms"
+
+[visitProject]
+other = "Visit project ↗"
+
+[viewProject]
+other = "View project"
+
+[viewPhotoStory]
+other = "View photo story"
+
+[randomPhotoAria]
+other = "View another random photo story"
+
+[switchLanguage]
+other = "切换到中文"
+
+[switchLanguageLabel]
+other = "中文"
+
+[nextPhoto]
+other = "View the next photo"
+
+[previousPhoto]
+other = "Return to the previous photo"
+
+[secondPhotoAlt]
+other = "A harvested field beside a birch grove"
+
+[subtitle]
+other = "August 2025 · Lenghu, Mangya, Qinghai, China"
+
+[poemLine1]
+other = "At dusk"
+
+[poemLine2]
+other = "I lay in a rapeseed field after the harvest"
+
+[poemLine3]
+other = "gazing up at the sky above my hometown"
+
+[poemLine4]
+other = "a few birds"
+
+[poemLine5]
+other = "ate the stars that had just risen"
+
+[poemLine6]
+other = "That night"
+
+[poemLine7]
+other = "I slept deeply, deep into the earth"
+
+[quoteLine1]
+other = "There is only one true heroism in the world:"
+
+[quoteLine2]
+other = "to see life as it really is"
+
+[quoteLine3]
+other = "and still love it."
+
+[quoteAuthor]
+other = "— Romain Rolland"

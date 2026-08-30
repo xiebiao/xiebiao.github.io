@@ -1,0 +1,27 @@
+{{ define "main" }}
+<main class="site-layout article-layout">
+  {{ partial "posts-sidebar.html" . }}
+  <section class="project-content article-index" aria-labelledby="page-heading">
+    <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
+      {{ partial "home-logo.html" . }}
+    </nav>
+    {{ $posts := .Pages.ByDate.Reverse }}
+    {{ if gt (len $posts) 0 }}
+    {{ $latest := index $posts 0 }}
+    <article class="article-page latest-post">
+      <header class="article-header">
+        <h1 id="page-heading"><a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></h1>
+        <time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date | time.Format ":date_long" }}</time>
+      </header>
+      <div class="article-body">{{ $latest.Content }}</div>
+    </article>
+    {{ else }}
+    <header class="article-header">
+      <h1 id="page-heading">{{ .Title }}</h1>
+      {{ with .Content }}<div class="article-intro">{{ . }}</div>{{ end }}
+    </header>
+    <p class="empty-state">{{ i18n "emptyPosts" }}</p>
+    {{ end }}
+  </section>
+</main>
+{{ end }}

@@ -1,0 +1,11 @@
+{{- $id := .Get "asset" -}}
+{{- if not $id }}{{ errorf "figure shortcode requires asset: %s" .Position }}{{ end -}}
+{{- $asset := index hugo.Data.media.assets $id -}}
+{{- if not $asset }}{{ errorf "unknown media asset %q at %s" $id .Position }}{{ end -}}
+{{- $sizes := .Get "sizes" | default "(max-width: 760px) calc(100vw - 2rem), 960px" -}}
+{{- $variants := sort $asset.variants "width" "asc" -}}
+{{- $fallback := index (last 1 $variants) 0 -}}
+<figure class="post-figure">
+  <img src="{{ $fallback.url }}" srcset="{{ range $index, $variant := $variants }}{{ if $index }}, {{ end }}{{ $variant.url }} {{ $variant.width }}w{{ end }}" sizes="{{ $sizes }}" width="{{ $fallback.width }}" height="{{ $fallback.height }}" alt="{{ $asset.alt }}" loading="lazy" decoding="async">
+  {{- with $asset.caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>

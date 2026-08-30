@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文章图片管理</title>
+  <style>
+    :root { color-scheme: light; font-family: ui-sans-serif, system-ui, sans-serif; color: #262626; background: #f6f5f2; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    header { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem max(1rem, calc((100vw - 1180px) / 2)); border-bottom: 1px solid #ddd9d1; background: rgba(246,245,242,.94); backdrop-filter: blur(12px); }
+    h1 { margin: 0; font-size: 1.2rem; }
+    main { width: min(1180px, calc(100% - 2rem)); margin: 2rem auto 5rem; }
+    .panel { padding: 1.25rem; border: 1px solid #ddd9d1; border-radius: 14px; background: #fff; }
+    .upload-grid, .metadata-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+    label { display: grid; gap: .35rem; color: #666; font-size: .8rem; }
+    input, textarea { width: 100%; padding: .7rem .75rem; border: 1px solid #d6d1c8; border-radius: 8px; background: #fff; color: #262626; }
+    textarea { min-height: 5rem; resize: vertical; }
+    .wide { grid-column: 1 / -1; }
+    .actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1rem; }
+    button { padding: .65rem .9rem; border: 1px solid #cfc9bf; border-radius: 8px; background: #fff; color: #333; }
+    button.primary { border-color: #262626; background: #262626; color: #fff; }
+    button.danger { color: #a02132; }
+    button:disabled { opacity: .5; cursor: wait; }
+    .toolbar { display: flex; gap: .75rem; margin: 2rem 0 1rem; }
+    .toolbar input { flex: 1; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .card { overflow: hidden; border: 1px solid #ddd9d1; border-radius: 14px; background: #fff; }
+    .preview { aspect-ratio: 3 / 2; display: grid; place-items: center; overflow: hidden; background: #eae7e1; }
+    .preview img { width: 100%; height: 100%; object-fit: cover; }
+    .card-body { padding: 1rem; }
+    .asset-title { display: flex; justify-content: space-between; gap: .75rem; margin-bottom: .8rem; }
+    .asset-title strong { overflow-wrap: anywhere; }
+    .muted { color: #89857f; font-size: .75rem; }
+    .refs { min-height: 1.3rem; margin-top: .65rem; color: #786f66; font-size: .75rem; }
+    #status { min-height: 1.25rem; color: #67625b; font-size: .85rem; }
+    #status.error { color: #a02132; }
+    .empty { padding: 4rem 1rem; text-align: center; color: #89857f; }
+    @media (max-width: 760px) { .upload-grid, .metadata-grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } header { padding-inline: 1rem; } }
+  </style>
+</head>
+<body>
+  <header><h1>文章图片管理</h1><div class="actions"><input id="import-file" type="file" accept="application/json,.json" hidden><button id="import" type="button">恢复清单</button><button id="export" type="button">导出 Hugo 清单</button></div></header>
+  <main>
+    <form id="upload" class="panel">
+      <div class="upload-grid">
+        <label class="wide">原图（JPEG、PNG、GIF，最大 50 MiB）<input name="image" type="file" accept="image/jpeg,image/png,image/gif" required></label>
+        <label>替代文本<input name="alt" required placeholder="准确描述图片内容"></label>
+        <label>说明<input name="caption" placeholder="显示在图片下方"></label>
+        <label>标签<input name="tags" placeholder="摄影, 青海"></label>
+        <label>拍摄时间<input name="takenAt" type="date"></label>
+        <label>地点<input name="location"></label>
+        <label>版权<input name="copyright" value="Bill Xie"></label>
+        <label class="wide">关联文章<input name="articleRefs" placeholder="posts/lenghu, posts/travel"></label>
+      </div>
+      <div class="actions"><button class="primary" type="submit">处理并上传</button><span id="status" role="status" aria-live="polite"></span></div>
+    </form>
+    <div class="toolbar"><input id="search" type="search" placeholder="搜索文件名、替代文本、地点或标签"><button id="refresh" type="button">刷新</button></div>
+    <section id="gallery" class="gallery" aria-live="polite"></section>
+  </main>
+  <script>
+    const gallery = document.querySelector('#gallery');
+    const status = document.querySelector('#status');
+    const search = document.querySelector('#search');
+    const upload = document.querySelector('#upload');
+    const setStatus = (message, error = false) => { status.textContent = message; status.className = error ? 'error' : ''; };
+    async function api(path, options) {
+      const response = await fetch(path, options);
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || `${response.status} ${response.statusText}`);
+      }
+      return response.status === 204 ? null : response.json();
+    }
+    function input(name, value = '') {
+      const label = document.createElement('label');
+      label.textContent = name;
+      const field = document.createElement('input');
+      field.name = name;
+      field.value = value;
+      label.append(field);
+      return label;
+    }
+    function renderCard(asset) {
+      const card = document.createElement('article'); card.className = 'card';
+      const preview = document.createElement('div'); preview.className = 'preview';
+      const jpeg = asset.variants.filter(item => item.format === 'jpeg').at(-1) || asset.variants.at(-1);
+      if (jpeg) { const image = document.createElement('img'); image.src = jpeg.url; image.alt = asset.alt; image.loading = 'lazy'; preview.append(image); }
+      const body = document.createElement('div'); body.className = 'card-body';
+      const title = document.createElement('div'); title.className = 'asset-title';
+      const name = document.createElement('strong'); name.textContent = asset.filename;
+      const size = document.createElement('span'); size.className = 'muted'; size.textContent = `${asset.width}×${asset.height}`;
+      title.append(name, size);
+      const fields = document.createElement('div'); fields.className = 'metadata-grid';
+      const values = { alt: asset.alt, caption: asset.caption, takenAt: asset.takenAt, location: asset.location, copyright: asset.copyright, tags: asset.tags.join(', '), articleRefs: asset.articleRefs.join(', ') };
+      for (const [key, value] of Object.entries(values)) fields.append(input(key, value));
+      const refs = document.createElement('div'); refs.className = 'refs'; refs.textContent = asset.articleRefs.length ? `引用：${asset.articleRefs.join('、')}` : '没有文章引用';
+      const actions = document.createElement('div'); actions.className = 'actions';
+      const save = document.createElement('button'); save.textContent = '保存元数据';
+      save.onclick = async () => {
+        const metadata = Object.fromEntries([...fields.querySelectorAll('input')].map(field => [field.name, field.value]));
+        metadata.tags = metadata.tags.split(/[,，\n]/).map(v => v.trim()).filter(Boolean);
+        metadata.articleRefs = metadata.articleRefs.split(/[,，\n]/).map(v => v.trim()).filter(Boolean);
+        try { save.disabled = true; await api(`/api/assets/${asset.id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(metadata)}); setStatus('元数据已保存并导出。'); await load(); }
+        catch (error) { setStatus(error.message, true); } finally { save.disabled = false; }
+      };
+      const copy = document.createElement('button'); copy.textContent = '复制 shortcode';
+      copy.onclick = async () => { await navigator.clipboard.writeText(`{{< figure asset="${asset.id}" >}}`); setStatus('shortcode 已复制。'); };
+      const remove = document.createElement('button'); remove.className = 'danger'; remove.textContent = '删除';
+      remove.onclick = async () => { if (!confirm(`删除 ${asset.filename} 及全部 R2 派生文件？`)) return; try { await api(`/api/assets/${asset.id}`, {method:'DELETE'}); setStatus('图片已删除。'); await load(); } catch (error) { setStatus(error.message, true); } };
+      actions.append(save, copy, remove); body.append(title, fields, refs, actions); card.append(preview, body); return card;
+    }
+    async function load() {
+      try {
+        const assets = await api(`/api/assets?q=${encodeURIComponent(search.value.trim())}`);
+        gallery.replaceChildren(...assets.map(renderCard));
+        if (!assets.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = '还没有匹配的图片。'; gallery.append(empty); }
+      } catch (error) { setStatus(error.message, true); }
+    }
+    upload.addEventListener('submit', async event => {
+      event.preventDefault(); const button = upload.querySelector('button[type=submit]');
+      try {
+        button.disabled = true; setStatus('正在上传原图，请稍候…');
+        const form = new FormData(upload); const file = form.get('image');
+        if (file instanceof File) { try { const bitmap = await createImageBitmap(file, {imageOrientation:'from-image'}); form.set('displayWidth', String(bitmap.width)); form.set('displayHeight', String(bitmap.height)); bitmap.close(); } catch (_) {} }
+        await api('/api/assets', {method:'POST', body:form}); upload.reset(); setStatus('上传完成，Cloudflare 转换地址与 Hugo 清单已更新。'); await load();
+      }
+      catch (error) { setStatus(error.message, true); } finally { button.disabled = false; }
+    });
+    document.querySelector('#refresh').onclick = load;
+    document.querySelector('#export').onclick = async () => { try { const result = await api('/api/export', {method:'POST'}); setStatus(`已导出到 ${result.manifest}`); } catch (error) { setStatus(error.message, true); } };
+    const importFile = document.querySelector('#import-file');
+    document.querySelector('#import').onclick = () => importFile.click();
+    importFile.onchange = async () => { const file = importFile.files[0]; if (!file || !confirm('用这个清单替换本地 SQLite 目录？R2 对象不会被修改。')) return; try { const result = await api('/api/import', {method:'POST', headers:{'Content-Type':'application/json'}, body:await file.text()}); setStatus(`已恢复 ${result.assets} 张图片。`); await load(); } catch (error) { setStatus(error.message, true); } finally { importFile.value = ''; } };
+    let timer; search.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(load, 200); });
+    load();
+  </script>
+</body>
+</html>

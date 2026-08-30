@@ -1,0 +1,21 @@
+{
+  "fixture-asset": {
+    "id": "fixture-asset",
+    "filename": "field.jpg",
+    "mimeType": "image/jpeg",
+    "checksum": "fixture",
+    "width": 1200,
+    "height": 800,
+    "alt": "青海的田野",
+    "caption": "夏末，冷湖",
+    "tags": ["摄影"],
+    "articleRefs": ["posts/figure"],
+    "variants": [
+      {"width": 480, "height": 320, "format": "auto", "key": "posts/fixture/original.jpeg#width=480", "url": "https://media.example/cdn-cgi/image/width=480,quality=82,format=auto,fit=scale-down,onerror=redirect/posts/fixture/original.jpeg", "size": 0},
+      {"width": 960, "height": 640, "format": "auto", "key": "posts/fixture/original.jpeg#width=960", "url": "https://media.example/cdn-cgi/image/width=960,quality=82,format=auto,fit=scale-down,onerror=redirect/posts/fixture/original.jpeg", "size": 0},
+      {"width": 1200, "height": 800, "format": "auto", "key": "posts/fixture/original.jpeg#width=1200", "url": "https://media.example/cdn-cgi/image/width=1200,quality=82,format=auto,fit=scale-down,onerror=redirect/posts/fixture/original.jpeg", "size": 0}
+    ],
+    "createdAt": "2026-08-29T00:00:00Z",
+    "updatedAt": "2026-08-29T00:00:00Z"
+  }
+}

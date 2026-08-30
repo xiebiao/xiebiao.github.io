@@ -1,0 +1,44 @@
+{{ define "main" }}
+<main class="photo-story photo-latest-page">
+  <nav class="project-index-topbar photo-content-topbar" aria-label="{{ i18n "navigationAria" }}">
+    {{ partial "home-logo.html" . }}
+  </nav>
+  {{ $photos := .Pages.ByDate.Reverse }}
+  {{ if gt (len $photos) 0 }}
+  {{ $latest := index $photos 0 }}
+  {{ $destinations := slice }}
+  {{ range $photos }}
+    {{ if ne .RelPermalink $latest.RelPermalink }}
+      {{ $destinations = $destinations | append .RelPermalink }}
+    {{ end }}
+  {{ end }}
+  <article class="latest-photo-story">
+    <header class="photo-story-header">
+      <h1 id="page-heading"><a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></h1>
+      <div class="photo-story-meta">
+        {{ with $latest.Params.location }}<span>{{ . }}</span>{{ end }}
+        <time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date | time.Format ":date_long" }}</time>
+      </div>
+      {{ with $latest.Content }}<div class="photo-story-intro">{{ . }}</div>{{ end }}
+    </header>
+    <div class="photo-story-gallery">
+      {{ range $index, $image := $latest.Params.images }}
+      <figure class="photo-story-frame">
+        {{ partial "photo-image.html" (dict "image" $image "destinations" $destinations "eager" (eq $index 0)) }}
+        {{ with $image.caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+      </figure>
+      {{ end }}
+    </div>
+  </article>
+  {{ else }}
+  <section class="photo-empty-state" aria-labelledby="page-heading">
+    <h1 id="page-heading">{{ .Title }}</h1>
+    <p class="empty-state">{{ i18n "emptyPhotos" }}</p>
+  </section>
+  {{ end }}
+</main>
+{{ end }}
+
+{{ define "head" }}
+  <script src="{{ "photo-random.js" | relURL }}" defer></script>
+{{ end }}

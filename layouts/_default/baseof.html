@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+  {{ $socialImage := .Params.image | default .Params.cover | default "images/photo-1920w.jpg" }}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ .Description | default site.Params.description }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ range .AllTranslations }}
+  <link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
+  {{ end }}
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="xiebiao.com">
+  <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:description" content="{{ .Description | default site.Params.description }}">
+  <meta property="og:image" content="{{ $socialImage | absURL }}">
+  <meta property="og:locale" content="{{ site.Language.Params.ogLocale }}">
+  {{ range .Translations }}<meta property="og:locale:alternate" content="{{ .Language.Params.ogLocale }}">{{ end }}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ .Description | default site.Params.description }}">
+  <meta name="twitter:image" content="{{ $socialImage | absURL }}">
+  <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "favicon-16x16.png" | relURL }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "apple-touch-icon.png" | relURL }}">
+  <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css">
+  <link rel="stylesheet" href="{{ "style.css" | relURL }}">
+  {{ block "head" . }}{{ end }}
+</head>
+<body>
+  {{ partial "site-header.html" . }}
+  {{ block "main" . }}{{ end }}
+</body>
+</html>
