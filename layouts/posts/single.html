@@ -1,17 +1,16 @@
 {{ define "main" }}
 <main class="site-layout article-layout">
-  {{ partial "posts-sidebar.html" . }}
   <article class="project-content article-page">
     <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
       {{ partial "home-logo.html" . }}
     </nav>
-    {{ partial "posts-mobile-taxonomies.html" . }}
     <header class="article-header">
       <p class="article-back"><a href="{{ "posts/" | relLangURL }}">{{ i18n "postsBack" }}</a></p>
       <h1>{{ .Title }}</h1>
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
     </header>
     <div class="article-body">{{ .Content }}</div>
+    {{ partial "post-navigation.html" . }}
   </article>
 </main>
 {{ end }}

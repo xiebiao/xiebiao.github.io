@@ -49,6 +49,18 @@ other = "Photos"
 [postsBack]
 other = "← Writing"
 
+[postNavigationAria]
+other = "Post navigation"
+
+[photoNavigationAria]
+other = "Photo story navigation"
+
+[newerPost]
+other = "Newer post"
+
+[olderPost]
+other = "Older post"
+
 [emptyPosts]
 other = "Articles are on the way."
 

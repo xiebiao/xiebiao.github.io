@@ -1,11 +1,10 @@
 {{ define "main" }}
 <main class="site-layout article-layout">
-  {{ partial "posts-sidebar.html" . }}
   <section class="project-content article-index" aria-labelledby="page-heading">
     <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
       {{ partial "home-logo.html" . }}
     </nav>
-    {{ partial "posts-mobile-taxonomies.html" . }}
+    {{ partial "posts-taxonomy-disclosure.html" . }}
     {{ $posts := .Pages.ByDate.Reverse }}
     {{ if gt (len $posts) 0 }}
     {{ $latest := index $posts 0 }}
@@ -15,6 +14,7 @@
         <time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date | time.Format ":date_long" }}</time>
       </header>
       <div class="article-body">{{ $latest.Content }}</div>
+      {{ partial "post-navigation.html" $latest }}
     </article>
     {{ else }}
     <header class="article-header">

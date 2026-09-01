@@ -1,5 +1,5 @@
 {{ $image := .image }}
-{{ $destinations := .destinations }}
+{{ $destinations := .destinations | default (slice) }}
 {{ $hasDestinations := gt (len $destinations) 0 }}
 {{ $sizes := .sizes | default "(max-width: 900px) calc(100vw - 2rem), 1200px" }}
 {{ $maxWidth := .maxWidth | default 0 }}

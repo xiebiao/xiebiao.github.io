@@ -49,6 +49,18 @@ other = "摄影"
 [postsBack]
 other = "← 文章"
 
+[postNavigationAria]
+other = "文章导航"
+
+[photoNavigationAria]
+other = "影集导航"
+
+[newerPost]
+other = "较新一篇"
+
+[olderPost]
+other = "较早一篇"
+
 [emptyPosts]
 other = "文章正在整理中。"
 

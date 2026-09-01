@@ -567,7 +567,74 @@ html[lang^="en"] .language-toggle {
   text-align: right;
 }
 
-.post-mobile-taxonomies {
+.post-taxonomy-disclosure {
+  display: block;
+  margin-bottom: 2.75rem;
+  border-radius: 10px;
+  background: rgba(44, 44, 44, 0.035);
+  color: #777;
+}
+
+.post-taxonomy-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.post-taxonomy-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.post-taxonomy-disclosure summary::after {
+  content: "+";
+  color: #999;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.post-taxonomy-disclosure[open] summary::after {
+  content: "−";
+}
+
+.post-taxonomy-disclosure summary:focus-visible {
+  outline: 2px solid #7d2942;
+  outline-offset: 2px;
+}
+
+.post-taxonomy-disclosure-panel {
+  width: 100%;
+  margin: 0;
+  padding: 0 1rem 1rem;
+  text-align: left;
+}
+
+.post-taxonomy-disclosure-panel .post-taxonomy-group {
+  padding-top: 1rem;
+}
+
+.post-taxonomy-disclosure-panel .post-taxonomy-group + .post-taxonomy-group {
+  margin-top: 1rem;
+}
+
+.post-taxonomy-disclosure-panel .post-taxonomy-group a {
+  justify-content: flex-start;
+}
+
+.post-taxonomy-disclosure-panel .post-tag-list {
+  justify-content: flex-start;
+}
+
+.post-taxonomy-disclosure-panel .post-tag-list a {
+  white-space: nowrap;
+}
+
+.taxonomy-layout .post-taxonomy-disclosure {
   display: none;
 }
 
@@ -993,84 +1060,81 @@ figcaption {
   line-height: 1.6;
 }
 
+.post-navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: clamp(4rem, 9vh, 6.5rem);
+}
+
+.post-navigation-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 18rem;
+  color: #2c2c2c;
+}
+
+.post-navigation-newer {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.post-navigation-older {
+  grid-column: 2;
+  justify-self: end;
+  text-align: right;
+}
+
+.post-navigation-label {
+  color: #999;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.post-navigation-title {
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 550;
+  line-height: 1.4;
+}
+
+.post-navigation-link:hover,
+.post-navigation-link:focus-visible {
+  color: #7d2942;
+}
+
+.post-navigation-link:hover .post-navigation-label,
+.post-navigation-link:focus-visible .post-navigation-label {
+  color: #7d2942;
+}
+
 @media (max-width: 760px) {
   .article-header {
     margin-bottom: 2rem;
+  }
+
+  .post-navigation {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+  }
+
+  .post-navigation-newer,
+  .post-navigation-older {
+    grid-column: 1;
+    justify-self: start;
+    text-align: left;
   }
 
   .article-layout .post-sidebar-taxonomy-only {
     display: none;
   }
 
+  .taxonomy-layout .post-taxonomy-disclosure {
+    display: block;
+  }
+
   .project-index-topbar.posts-content-topbar {
     margin-bottom: 1rem;
-  }
-
-  .post-mobile-taxonomies {
-    display: block;
-    margin-bottom: 2.75rem;
-    border-radius: 10px;
-    background: rgba(44, 44, 44, 0.035);
-    color: #777;
-  }
-
-  .post-mobile-taxonomies summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.8rem 1rem;
-    font-size: 0.85rem;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .post-mobile-taxonomies summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .post-mobile-taxonomies summary::after {
-    content: "+";
-    color: #999;
-    font-family: system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1;
-  }
-
-  .post-mobile-taxonomies[open] summary::after {
-    content: "−";
-  }
-
-  .post-mobile-taxonomies summary:focus-visible {
-    outline: 2px solid #7d2942;
-    outline-offset: 2px;
-  }
-
-  .post-mobile-taxonomy-panel {
-    width: 100%;
-    margin: 0;
-    padding: 0 1rem 1rem;
-    text-align: left;
-  }
-
-  .post-mobile-taxonomy-panel .post-taxonomy-group {
-    padding-top: 1rem;
-  }
-
-  .post-mobile-taxonomy-panel .post-taxonomy-group + .post-taxonomy-group {
-    margin-top: 1rem;
-  }
-
-  .post-mobile-taxonomy-panel .post-taxonomy-group a {
-    justify-content: flex-start;
-  }
-
-  .post-mobile-taxonomy-panel .post-tag-list {
-    justify-content: flex-start;
-  }
-
-  .post-mobile-taxonomy-panel .post-tag-list a {
-    white-space: nowrap;
   }
 
   .taxonomy-term-list {
@@ -1448,6 +1512,21 @@ figcaption {
   margin-left: auto;
 }
 
+.photo-single-topbar {
+  width: min(100%, 960px);
+  margin: 0 auto 2rem;
+}
+
+.photo-single-topbar a {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.photo-single-topbar a:hover,
+.photo-single-topbar a:focus-visible {
+  color: #7d2942;
+}
+
 .latest-photo-story .photo-story-header h1 a {
   color: #2c2c2c;
 }
@@ -1474,10 +1553,6 @@ figcaption {
   width: min(100%, 760px);
   margin: clamp(3rem, 8vw, 6rem) auto 0;
   text-align: center;
-}
-
-.photo-story-header .module-back {
-  text-align: left;
 }
 
 .photo-story-header h1 {
@@ -1508,6 +1583,12 @@ figcaption {
 
 .photo-single-page .photo-story-gallery {
   width: min(100%, 960px);
+}
+
+.photo-single-page .photo-navigation {
+  width: min(100%, 760px);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .photo-single-page .photo-story-frame {
