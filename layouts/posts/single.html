@@ -5,6 +5,7 @@
     <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
       {{ partial "home-logo.html" . }}
     </nav>
+    {{ partial "posts-mobile-taxonomies.html" . }}
     <header class="article-header">
       <p class="article-back"><a href="{{ "posts/" | relLangURL }}">{{ i18n "postsBack" }}</a></p>
       <h1>{{ .Title }}</h1>

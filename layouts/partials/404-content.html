@@ -1,0 +1,17 @@
+<main class="error-page">
+  <section class="error-content" aria-labelledby="error-heading">
+    {{ partial "home-logo.html" .page }}
+    {{ with .content }}
+      <h1 id="error-heading">{{ .Title }}</h1>
+      <p class="error-subtitle" lang="en">Not Found</p>
+      <div class="error-message" lang="{{ .Language.Locale }}">{{ .Content }}</div>
+    {{ else }}
+      <h1 id="error-heading">404</h1>
+      <p class="error-subtitle" lang="en">Not Found</p>
+    {{ end }}
+    <nav class="error-home-links" aria-label="Home">
+      <a href="{{ "/" | relURL }}">English Home</a>
+      <a href="{{ "/zh/" | relURL }}">返回中文首页</a>
+    </nav>
+  </section>
+</main>

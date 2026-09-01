@@ -1,0 +1,7 @@
+{{ define "head" }}
+  <meta name="robots" content="noindex">
+{{ end }}
+
+{{ define "main" }}
+{{ partial "404-content.html" (dict "page" . "content" .) }}
+{{ end }}

@@ -6,7 +6,8 @@ location: "青海"
 cover: "images/photo-960w.jpg"
 coverAlt: "测试照片"
 images:
-  - src: "images/photo-960w.jpg"
+  - asset: "fixture-asset"
+    src: "images/photo-960w.jpg"
     width: 960
     height: 540
     alt: "测试照片"

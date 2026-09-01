@@ -22,6 +22,9 @@ other = "文章分类与标签"
 [postsTaxonomiesAria]
 other = "浏览文章"
 
+[postFiltersLabel]
+other = "分类与标签"
+
 [categoriesLabel]
 other = "分类"
 

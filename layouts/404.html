@@ -1,0 +1,8 @@
+{{ define "head" }}
+  <meta name="robots" content="noindex">
+{{ end }}
+
+{{ define "main" }}
+{{ $errorContent := site.GetPage "/404" }}
+{{ partial "404-content.html" (dict "page" . "content" $errorContent) }}
+{{ end }}

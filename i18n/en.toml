@@ -22,6 +22,9 @@ other = "Post categories and tags"
 [postsTaxonomiesAria]
 other = "Browse posts"
 
+[postFiltersLabel]
+other = "Categories & tags"
+
 [categoriesLabel]
 other = "Categories"
 

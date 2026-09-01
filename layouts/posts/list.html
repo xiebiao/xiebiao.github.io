@@ -5,6 +5,7 @@
     <nav class="project-index-topbar posts-content-topbar" aria-label="{{ i18n "navigationAria" }}">
       {{ partial "home-logo.html" . }}
     </nav>
+    {{ partial "posts-mobile-taxonomies.html" . }}
     {{ $posts := .Pages.ByDate.Reverse }}
     {{ if gt (len $posts) 0 }}
     {{ $latest := index $posts 0 }}

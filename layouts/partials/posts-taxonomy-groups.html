@@ -1,0 +1,25 @@
+<section class="post-taxonomy-group">
+  <h2>{{ i18n "categoriesLabel" }}</h2>
+  {{ with site.Taxonomies.categories }}
+  <ul>
+    {{ range .ByCount }}
+    <li><a href="{{ .Page.RelPermalink }}"><span>{{ .Page.LinkTitle }}</span><small>{{ .Count }}</small></a></li>
+    {{ end }}
+  </ul>
+  {{ else }}
+  <p class="post-taxonomy-empty">{{ i18n "emptyCategories" }}</p>
+  {{ end }}
+</section>
+
+<section class="post-taxonomy-group">
+  <h2>{{ i18n "tagsLabel" }}</h2>
+  {{ with site.Taxonomies.tags }}
+  <ul class="post-tag-list">
+    {{ range .ByCount }}
+    <li><a href="{{ .Page.RelPermalink }}"><span>{{ .Page.LinkTitle }}</span><small>{{ .Count }}</small></a></li>
+    {{ end }}
+  </ul>
+  {{ else }}
+  <p class="post-taxonomy-empty">{{ i18n "emptyTags" }}</p>
+  {{ end }}
+</section>
