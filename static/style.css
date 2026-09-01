@@ -6,6 +6,36 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'ET Book';
+  src:
+    url('https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff') format('woff'),
+    url('/fonts/et-book/et-book-roman.woff') format('woff');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ET Book';
+  src:
+    url('https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff') format('woff'),
+    url('/fonts/et-book/et-book-italic.woff') format('woff');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ET Book';
+  src:
+    url('https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff') format('woff'),
+    url('/fonts/et-book/et-book-bold.woff') format('woff');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 *,
 *::before,
 *::after {
@@ -25,6 +55,31 @@ body {
 
 html[lang^="en"] body {
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
+}
+
+html[lang^="en"] .article-body,
+html[lang^="en"] .article-intro,
+html[lang^="en"] .module-intro,
+html[lang^="en"] .photo-story-intro,
+html[lang^="en"] .error-message {
+  font-family: 'ET Book', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: clamp(1.05rem, 0.3vw + 1rem, 1.18rem);
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  letter-spacing: 0.005em;
+  line-height: 1.72;
+}
+
+html[lang^="en"] .article-body {
+  max-width: 34em;
+}
+
+html[lang^="en"] .article-body p,
+html[lang^="en"] .article-body ul,
+html[lang^="en"] .article-body ol,
+html[lang^="en"] .article-body blockquote {
+  margin-top: 0.9em;
+  margin-bottom: 0.9em;
 }
 
 .site-header {
@@ -252,7 +307,7 @@ html[lang^="en"] .language-toggle {
   color: #2c2c2c;
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: clamp(4.5rem, 13vw, 6.5rem);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
 }
 
