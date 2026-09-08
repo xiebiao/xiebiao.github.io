@@ -5,7 +5,7 @@ date: 2026-08-30
 description: "A new independent product, currently taking shape."
 platforms: "Web"
 status: "In development"
-weight: 2
+weight: 3
 ---
 
 ## Work in progress
