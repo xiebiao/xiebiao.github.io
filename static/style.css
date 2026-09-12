@@ -1645,7 +1645,7 @@ figcaption {
 }
 
 .photo-single-page .photo-story-gallery {
-  width: min(100%, 960px);
+  width: min(100%, 760px);
 }
 
 .photo-single-page .photo-navigation {
@@ -1656,7 +1656,7 @@ figcaption {
 
 .photo-single-page .photo-story-frame {
   width: 100%;
-  max-width: 960px;
+  max-width: 760px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -1694,6 +1694,65 @@ figcaption {
 .photo-random-link {
   display: block;
   cursor: pointer;
+}
+
+.photo-lightbox-link {
+  display: block;
+  cursor: zoom-in;
+}
+
+.photo-lightbox {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: clamp(1rem, 4vw, 3rem);
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.photo-lightbox[open] {
+  display: grid;
+  place-items: center;
+}
+
+.photo-lightbox::backdrop {
+  background: rgba(44, 44, 44, 0.94);
+}
+
+.photo-lightbox img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 2rem);
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.photo-lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgba(250, 248, 245, 0.4);
+  border-radius: 50%;
+  background: rgba(44, 44, 44, 0.7);
+  color: var(--color-canvas);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.photo-lightbox-close:hover,
+.photo-lightbox-close:focus-visible {
+  border-color: var(--color-canvas);
 }
 
 .photo-story-frame figcaption {
