@@ -1,3 +1,24 @@
+/* Three primary colors; neutral shades provide readable content hierarchy. */
+:root {
+  --color-canvas: #faf8f5;
+  --color-ink: #2c2c2c;
+  --color-accent: #7d2942;
+
+  --color-body: #4b4b4b;
+  --color-secondary: #606060;
+  --color-muted: #6b6b6b;
+  --color-border: #e3ded8;
+  --color-border-strong: #cfc8c1;
+  --color-surface: #f1ede8;
+  --color-media: #e8e4df;
+
+  --color-canvas-glass: rgba(250, 248, 245, 0.88);
+  --color-card: rgba(255, 255, 255, 0.35);
+  --color-card-hover: rgba(255, 255, 255, 0.55);
+  --color-hover: rgba(44, 44, 44, 0.05);
+  --color-shadow: rgba(44, 44, 44, 0.06);
+}
+
 @font-face {
   font-family: 'Source Serif 4';
   src: url('fonts/source-serif-4/SourceSerif4-Variable.ttf') format('truetype');
@@ -46,8 +67,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #faf8f5;
-  color: #2c2c2c;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
   font-size: clamp(14px, 1vw + 0.5rem, 20px);
   font-family: 'LXGW WenKai', 'STKaiti', 'KaiTi', Georgia, serif;
   -webkit-font-smoothing: antialiased;
@@ -82,6 +103,27 @@ html[lang^="en"] .article-body blockquote {
   margin-bottom: 0.9em;
 }
 
+/* Latin glyphs use the first family; Chinese glyphs fall back to WenKai.
+   :lang() also respects content-level language overrides, including the 404 body. */
+html:lang(zh) body,
+html:lang(zh) :is(h1, h2, h3, h4, h5, h6),
+html .error-page:lang(zh) {
+  font-family: 'Source Serif 4', 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+}
+
+html .home-intro:lang(zh),
+html .article-body:lang(zh),
+html .article-intro:lang(zh),
+html .module-intro:lang(zh),
+html .photo-story-intro:lang(zh),
+html .error-message:lang(zh),
+html .poem:lang(zh),
+html .project-card-copy:lang(zh),
+html .project-detail-lead:lang(zh),
+html .post-list-item:lang(zh) p {
+  font-family: 'ET Book', 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+}
+
 .site-header {
   position: relative;
   z-index: 10;
@@ -96,10 +138,10 @@ html[lang^="en"] .article-body blockquote {
   z-index: 10;
   margin: 0;
   padding: 0.45rem 0.75rem;
-  border: 1px solid rgba(44, 44, 44, 0.16);
+  border: 1px solid var(--color-border-strong);
   border-radius: 999px;
-  background: rgba(250, 248, 245, 0.88);
-  color: #6b6b6b;
+  background: var(--color-canvas-glass);
+  color: var(--color-secondary);
   font-family: inherit;
   font-size: 0.8rem;
   line-height: 1.25;
@@ -114,13 +156,13 @@ html[lang^="en"] .language-toggle {
 
 .language-toggle:hover,
 .language-toggle:focus-visible {
-  border-color: rgba(44, 44, 44, 0.35);
-  background: #fff;
-  color: #2c2c2c;
+  border-color: var(--color-accent);
+  background: var(--color-canvas);
+  color: var(--color-ink);
 }
 
 .language-toggle:focus-visible {
-  outline: 2px solid rgba(44, 44, 44, 0.3);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 
@@ -140,7 +182,7 @@ html[lang^="en"] .language-toggle {
   width: 100%;
   min-height: calc(100svh - 4.25rem);
   padding: clamp(4rem, 7vh, 5rem) clamp(1.5rem, 8vw, 6rem) clamp(3rem, 6.5vh, 4rem);
-  color: #2c2c2c;
+  color: var(--color-ink);
   text-align: center;
 }
 
@@ -148,10 +190,10 @@ html[lang^="en"] .language-toggle {
   top: clamp(1.5rem, 4vh, 2.5rem);
   right: clamp(1.5rem, 5vw, 5rem);
   padding: 0.65rem 1.15rem;
-  border-color: rgba(44, 44, 44, 0.35);
+  border-color: var(--color-accent);
   border-radius: 12px;
   background: transparent;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-size: 0.9rem;
 }
 
@@ -172,12 +214,12 @@ html[lang^="en"] .language-toggle {
 .home-avatar-link img {
   border-radius: 50%;
   object-fit: cover;
-  background: #e8e4df;
+  background: var(--color-media);
 }
 
 .home-identity h1 {
   margin: 2.4rem 0 0;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-family: inherit;
   font-size: clamp(1.35rem, 2.4vw, 1.8rem);
   font-weight: 550;
@@ -186,20 +228,20 @@ html[lang^="en"] .language-toggle {
 
 .home-site-link {
   margin-top: 1.5rem;
-  color: #999;
+  color: var(--color-muted);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: 0.88rem;
 }
 
 .home-site-link:hover,
 .home-site-link:focus-visible {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .home-intro {
   max-width: 42rem;
   margin: 3rem 0 0;
-  color: #4b4b4b;
+  color: var(--color-body);
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   line-height: 1.8;
 }
@@ -217,7 +259,7 @@ html[lang^="en"] .language-toggle {
   align-items: center;
   padding: 0.5rem 0.2rem;
   border-radius: 6px;
-  color: #5f5f5f;
+  color: var(--color-secondary);
   font-size: clamp(0.92rem, 1.3vw, 1.05rem);
   font-weight: 450;
   letter-spacing: 0.035em;
@@ -229,18 +271,18 @@ html[lang^="en"] .language-toggle {
   height: 3px;
   margin: 0 clamp(1.25rem, 3vw, 2.5rem);
   border-radius: 50%;
-  background: #b8b3ad;
+  background: var(--color-border-strong);
   content: "";
 }
 
 .home-module-nav a:hover,
 .home-module-nav a:focus-visible {
-  color: #7d2942;
+  color: var(--color-accent);
   transform: translateY(-1px);
 }
 
 .home-module-nav a:focus-visible {
-  outline: 1px solid rgba(125, 41, 66, 0.35);
+  outline: 1px solid var(--color-accent);
   outline-offset: 4px;
 }
 
@@ -258,13 +300,13 @@ html[lang^="en"] .language-toggle {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  color: #777;
+  color: var(--color-secondary);
 }
 
 .home-social-icons a:hover,
 .home-social-icons a:focus-visible {
-  background: rgba(44, 44, 44, 0.05);
-  color: #2c2c2c;
+  background: var(--color-hover);
+  color: var(--color-ink);
 }
 
 .home-social-icons svg {
@@ -277,7 +319,7 @@ html[lang^="en"] .language-toggle {
   width: 100%;
   margin-top: auto;
   padding: 1.25rem 1rem 2rem;
-  color: #999;
+  color: var(--color-muted);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: 0.85rem;
   letter-spacing: 0.04em;
@@ -305,7 +347,7 @@ html[lang^="en"] .language-toggle {
 
 .error-content h1 {
   margin: clamp(3rem, 8vh, 5rem) 0 0;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: clamp(4.5rem, 13vw, 6.5rem);
   font-weight: 800;
@@ -315,7 +357,7 @@ html[lang^="en"] .language-toggle {
 .error-subtitle {
   width: fit-content;
   margin: 0.5rem auto 0;
-  color: #777;
+  color: var(--color-secondary);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: clamp(2.5rem, 7vw, 3.75rem);
   font-weight: 700;
@@ -329,12 +371,12 @@ html[lang^="en"] .language-toggle {
   width: 100%;
   height: 1px;
   margin: 1rem auto 0;
-  background: rgba(44, 44, 44, 0.28);
+  background: var(--color-border-strong);
 }
 
 .error-message {
   margin-top: 2.5rem;
-  color: #777;
+  color: var(--color-secondary);
   line-height: 1.9;
   line-break: strict;
   text-align: center;
@@ -355,7 +397,7 @@ html[lang^="en"] .language-toggle {
 }
 
 .error-home-links a {
-  color: #7d2942;
+  color: var(--color-accent);
   font-size: 0.9rem;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -427,7 +469,7 @@ html[lang^="en"] .language-toggle {
   height: 112px;
   border-radius: 50%;
   object-fit: cover;
-  background: #e8e4df;
+  background: var(--color-media);
 }
 
 .profile-copy {
@@ -437,7 +479,7 @@ html[lang^="en"] .language-toggle {
 
 .profile-name {
   margin: 0;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-family: inherit;
   font-size: 1.2rem;
   font-weight: 550;
@@ -447,26 +489,26 @@ html[lang^="en"] .language-toggle {
 .profile-site {
   display: inline-block;
   margin-top: 0.3rem;
-  color: #999;
+  color: var(--color-muted);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: 0.78rem;
 }
 
 .profile-site:hover,
 .profile-site:focus-visible {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .projects {
   margin-top: 2.75rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e3ded8;
+  border-top: 1px solid var(--color-border);
   text-align: left;
 }
 
 .projects h2 {
   margin: 0 0 0.65rem;
-  color: #999;
+  color: var(--color-muted);
   font-family: inherit;
   font-size: 0.72rem;
   font-weight: 600;
@@ -479,7 +521,7 @@ html[lang^="en"] .language-toggle {
   margin: 0 -0.55rem;
   padding: 0.55rem;
   border-radius: 8px;
-  color: #777;
+  color: var(--color-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -507,7 +549,7 @@ html[lang^="en"] .language-toggle {
 }
 
 .external-arrow {
-  color: #aaa;
+  color: var(--color-muted);
   font-family: system-ui, sans-serif;
   font-size: 0.7rem;
   transition: color 160ms ease, transform 160ms ease;
@@ -517,22 +559,22 @@ html[lang^="en"] .language-toggle {
   display: block;
   margin-top: 0.05rem;
   padding-left: 1.35rem;
-  color: #aaa;
+  color: var(--color-muted);
   font-size: 0.7rem;
   line-height: 1.45;
 }
 
 .project-link-external:hover .external-arrow,
 .project-link-external:focus-visible .external-arrow {
-  color: #bb1c46;
+  color: var(--color-accent);
   transform: translate(1px, -1px);
 }
 
 .project-link:hover,
 .project-link:focus-visible,
 .project-link.is-active {
-  background: rgba(44, 44, 44, 0.045);
-  color: #2c2c2c;
+  background: var(--color-hover);
+  color: var(--color-ink);
 }
 
 .social-links {
@@ -549,7 +591,7 @@ html[lang^="en"] .language-toggle {
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 50%;
-  color: #aaa;
+  color: var(--color-muted);
 }
 
 .social-links svg {
@@ -559,8 +601,8 @@ html[lang^="en"] .language-toggle {
 
 .social-links a:hover,
 .social-links a:focus-visible {
-  background: rgba(44, 44, 44, 0.05);
-  color: #2c2c2c;
+  background: var(--color-hover);
+  color: var(--color-ink);
 }
 
 .post-taxonomies {
@@ -572,8 +614,8 @@ html[lang^="en"] .language-toggle {
   display: block;
   margin-bottom: 2.75rem;
   border-radius: 10px;
-  background: rgba(44, 44, 44, 0.035);
-  color: #777;
+  background: var(--color-surface);
+  color: var(--color-secondary);
 }
 
 .post-taxonomy-disclosure summary {
@@ -593,7 +635,7 @@ html[lang^="en"] .language-toggle {
 
 .post-taxonomy-disclosure summary::after {
   content: "+";
-  color: #999;
+  color: var(--color-muted);
   font-family: system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1;
@@ -604,7 +646,7 @@ html[lang^="en"] .language-toggle {
 }
 
 .post-taxonomy-disclosure summary:focus-visible {
-  outline: 2px solid #7d2942;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -659,7 +701,7 @@ html[lang^="en"] .language-toggle {
 
 .post-taxonomy-group h2 {
   margin: 0 0 0.75rem;
-  color: #999;
+  color: var(--color-muted);
   font-family: inherit;
   font-size: 0.7rem;
   font-weight: 600;
@@ -685,15 +727,15 @@ html[lang^="en"] .language-toggle {
   margin: 0 -0.45rem;
   padding: 0.45rem;
   border-radius: 7px;
-  color: #777;
+  color: var(--color-secondary);
   font-size: 0.82rem;
   line-height: 1.35;
 }
 
 .post-taxonomy-group a:hover,
 .post-taxonomy-group a:focus-visible {
-  background: rgba(44, 44, 44, 0.045);
-  color: #2c2c2c;
+  background: var(--color-hover);
+  color: var(--color-ink);
 }
 
 .post-taxonomy-group small {
@@ -704,8 +746,8 @@ html[lang^="en"] .language-toggle {
   height: 1.25rem;
   padding: 0 0.3rem;
   border-radius: 999px;
-  background: #f1ede8;
-  color: #999;
+  background: var(--color-surface);
+  color: var(--color-muted);
   font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, serif;
   font-size: 0.62rem;
 }
@@ -725,7 +767,7 @@ html[lang^="en"] .language-toggle {
   gap: 0.4rem;
   margin: 0;
   padding: 0.35rem 0.5rem;
-  border: 1px solid #e3ded8;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   font-size: 0.72rem;
 }
@@ -739,7 +781,7 @@ html[lang^="en"] .language-toggle {
 
 .post-taxonomy-empty {
   margin: 0;
-  color: #aaa;
+  color: var(--color-muted);
   font-size: 0.72rem;
   line-height: 1.5;
 }
@@ -756,19 +798,19 @@ html[lang^="en"] .language-toggle {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid #e3ded8;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .taxonomy-term-card:hover,
 .taxonomy-term-card:focus-visible {
-  border-color: #cfc8c1;
-  background: rgba(255, 255, 255, 0.45);
+  border-color: var(--color-border-strong);
+  background: var(--color-card-hover);
 }
 
 .taxonomy-term-card small {
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.72rem;
 }
 
@@ -818,15 +860,15 @@ figure img {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  background-color: #e8e4df;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  background-color: var(--color-media);
+  box-shadow: 0 4px 24px var(--color-shadow);
 }
 
 .subtitle {
   margin-top: 1rem;
   padding: 0 0.5rem;
   font-size: clamp(0.75rem, 0.5vw + 0.5rem, 0.95rem);
-  color: #999;
+  color: var(--color-muted);
   line-height: 1.6;
   letter-spacing: 0.1em;
 }
@@ -841,7 +883,7 @@ figcaption {
   margin-left: 0;
   margin-right: 0;
   width: 100%;
-  color: #6b6b6b;
+  color: var(--color-body);
   line-height: 2;
   letter-spacing: 0.05em;
   text-align: left;
@@ -853,7 +895,7 @@ figcaption {
 }
 
 .quote-author {
-  color: #999;
+  color: var(--color-muted);
 }
 
 .photo-copy-secondary {
@@ -865,7 +907,7 @@ figcaption {
 .poem h3 {
   font-size: clamp(1rem, 0.8vw + 0.6rem, 1.25rem);
   font-weight: normal;
-  color: #2c2c2c;
+  color: var(--color-ink);
   margin-bottom: 1rem;
 }
 
@@ -968,7 +1010,7 @@ figcaption {
 
 .article-header h1 {
   margin: 0 0 0.65rem;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-family: inherit;
   font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: 500;
@@ -976,18 +1018,18 @@ figcaption {
 }
 
 .latest-post .article-header h1 a {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .latest-post .article-header h1 a:hover,
 .latest-post .article-header h1 a:focus-visible {
-  color: #7d2942;
+  color: var(--color-accent);
 }
 
 .article-header time,
 .article-back,
 .post-list-item time {
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.8rem;
 }
 
@@ -997,12 +1039,12 @@ figcaption {
 
 .article-intro,
 .empty-state {
-  color: #777;
+  color: var(--color-secondary);
 }
 
 .post-list-item {
   padding: 1.75rem 0;
-  border-top: 1px solid #e3ded8;
+  border-top: 1px solid var(--color-border);
 }
 
 .post-list-item h2 {
@@ -1014,12 +1056,12 @@ figcaption {
 
 .post-list-item p {
   margin: 0.75rem 0 0;
-  color: #777;
+  color: var(--color-secondary);
   line-height: 1.8;
 }
 
 .article-body {
-  color: #4b4b4b;
+  color: var(--color-body);
   line-height: 1.95;
 }
 
@@ -1040,7 +1082,7 @@ figcaption {
 .article-body a,
 .post-list-item a,
 .article-back a {
-  color: #7d2942;
+  color: var(--color-accent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
@@ -1056,7 +1098,7 @@ figcaption {
 
 .post-figure figcaption {
   margin-top: 0.8rem;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.8rem;
   line-height: 1.6;
 }
@@ -1073,7 +1115,7 @@ figcaption {
   flex-direction: column;
   gap: 0.4rem;
   max-width: 18rem;
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .post-navigation-newer {
@@ -1088,7 +1130,7 @@ figcaption {
 }
 
 .post-navigation-label {
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
 }
@@ -1101,12 +1143,12 @@ figcaption {
 
 .post-navigation-link:hover,
 .post-navigation-link:focus-visible {
-  color: #7d2942;
+  color: var(--color-accent);
 }
 
 .post-navigation-link:hover .post-navigation-label,
 .post-navigation-link:focus-visible .post-navigation-label {
-  color: #7d2942;
+  color: var(--color-accent);
 }
 
 @media (max-width: 760px) {
@@ -1150,7 +1192,7 @@ figcaption {
 
 .module-header h1 {
   margin: 0;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-family: inherit;
   font-size: clamp(2.75rem, 6vw, 5rem);
   font-weight: 500;
@@ -1161,7 +1203,7 @@ figcaption {
 .module-header > p {
   max-width: 34rem;
   margin-top: 1.25rem;
-  color: #777;
+  color: var(--color-secondary);
   line-height: 1.8;
 }
 
@@ -1171,13 +1213,13 @@ figcaption {
 
 .module-back {
   margin: 0 0 2rem;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.8rem;
 }
 
 .module-back a,
 .module-text-link {
-  color: #7d2942;
+  color: var(--color-accent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
@@ -1198,7 +1240,7 @@ figcaption {
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
-  color: #2c2c2c;
+  color: var(--color-ink);
   font-size: 0.9rem;
   font-weight: 550;
 }
@@ -1241,15 +1283,15 @@ figcaption {
 
 .project-card {
   overflow: hidden;
-  border: 1px solid #e3ded8;
+  border: 1px solid var(--color-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--color-card);
   transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
 .project-card:hover {
-  border-color: #cfc8c1;
-  background: rgba(255, 255, 255, 0.55);
+  border-color: var(--color-border-strong);
+  background: var(--color-card-hover);
   transform: translateY(-2px);
 }
 
@@ -1282,7 +1324,7 @@ figcaption {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: #f1ede8;
+  background: var(--color-surface);
 }
 
 .project-card-mark img {
@@ -1298,7 +1340,7 @@ figcaption {
   flex: 0 0 auto;
   max-width: 11rem;
   margin: 0;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-align: right;
@@ -1317,14 +1359,34 @@ figcaption {
 }
 
 .project-card h2 {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .project-card-copy > p:not(.project-card-status) {
   max-width: 36rem;
   margin: 0;
-  color: #777;
+  color: var(--color-secondary);
   line-height: 1.75;
+}
+
+.project-card-finances {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+}
+
+.project-card-finances dt {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.project-card-finances dd {
+  margin: 0.35rem 0 0;
+  color: var(--color-accent);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .project-card-footer {
@@ -1337,7 +1399,7 @@ figcaption {
 }
 
 .project-card-platforms {
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
 }
@@ -1349,7 +1411,7 @@ figcaption {
 .project-detail-header {
   padding: clamp(2rem, 5vw, 4rem);
   border-radius: 16px;
-  background: #f1ede8;
+  background: var(--color-surface);
 }
 
 .project-detail-title {
@@ -1374,7 +1436,7 @@ figcaption {
 .project-detail-lead {
   max-width: 36rem;
   margin: 2rem 0;
-  color: #666;
+  color: var(--color-secondary);
   font-size: 1.05rem;
   line-height: 1.8;
 }
@@ -1392,7 +1454,7 @@ figcaption {
 
 .project-detail-meta dt {
   margin-bottom: 0.3rem;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1400,7 +1462,7 @@ figcaption {
 
 .project-detail-meta dd {
   margin: 0;
-  color: #444;
+  color: var(--color-body);
   font-size: 0.85rem;
 }
 
@@ -1408,15 +1470,15 @@ figcaption {
   display: inline-block;
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  background: #2c2c2c;
-  color: #faf8f5;
+  background: var(--color-ink);
+  color: var(--color-canvas);
   font-size: 0.78rem;
 }
 
 .project-external-link:hover,
 .project-external-link:focus-visible {
-  background: #7d2942;
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-canvas);
 }
 
 .project-detail-body {
@@ -1455,7 +1517,7 @@ figcaption {
   display: block;
   overflow: hidden;
   border-radius: 12px;
-  background: #e8e4df;
+  background: var(--color-media);
 }
 
 .photo-card-image img {
@@ -1488,13 +1550,13 @@ figcaption {
 }
 
 .photo-card-caption h2 a {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .photo-card-caption p,
 .photo-card-caption > span {
   margin: 0.25rem 0 0;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.72rem;
 }
 
@@ -1519,22 +1581,22 @@ figcaption {
 }
 
 .photo-single-topbar a {
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.8rem;
 }
 
 .photo-single-topbar a:hover,
 .photo-single-topbar a:focus-visible {
-  color: #7d2942;
+  color: var(--color-accent);
 }
 
 .latest-photo-story .photo-story-header h1 a {
-  color: #2c2c2c;
+  color: var(--color-ink);
 }
 
 .latest-photo-story .photo-story-header h1 a:hover,
 .latest-photo-story .photo-story-header h1 a:focus-visible {
-  color: #7d2942;
+  color: var(--color-accent);
 }
 
 .photo-empty-state {
@@ -1566,7 +1628,7 @@ figcaption {
 
 .photo-story-intro {
   margin-top: 2.5rem;
-  color: #666;
+  color: var(--color-body);
   font-size: inherit;
   line-height: 1.9;
 }
@@ -1625,8 +1687,8 @@ figcaption {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  background: #e8e4df;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  background: var(--color-media);
+  box-shadow: 0 4px 24px var(--color-shadow);
 }
 
 .photo-random-link {
@@ -1636,7 +1698,7 @@ figcaption {
 
 .photo-story-frame figcaption {
   margin-top: 0.85rem;
-  color: #999;
+  color: var(--color-muted);
   font-size: 0.75rem;
   text-align: center;
 }

@@ -30,6 +30,22 @@
           <div class="project-card-copy">
             {{ with .Description }}<p>{{ . }}</p>{{ end }}
           </div>
+          {{ if or (isset .Params "expensesusd") (isset .Params "revenueusd") }}
+          <dl class="project-card-finances">
+            {{ if isset .Params "expensesusd" }}
+            <div>
+              <dt>{{ i18n "projectExpenses" }}</dt>
+              <dd>${{ printf "%.0f" (float .Params.expensesusd) }}</dd>
+            </div>
+            {{ end }}
+            {{ if isset .Params "revenueusd" }}
+            <div>
+              <dt>{{ i18n "projectRevenue" }}</dt>
+              <dd>${{ printf "%.0f" (float .Params.revenueusd) }}</dd>
+            </div>
+            {{ end }}
+          </dl>
+          {{ end }}
           <footer class="project-card-footer">
             {{ with .Params.platforms }}<span class="project-card-platforms">{{ . }}</span>{{ end }}
             <span class="module-text-link">{{ i18n "viewProject" }} →</span>

@@ -88,6 +88,12 @@ other = "Visit project ↗"
 [viewProject]
 other = "View project"
 
+[projectExpenses]
+other = "Total spent"
+
+[projectRevenue]
+other = "Total revenue"
+
 [viewPhotoStory]
 other = "View photo story"
 
