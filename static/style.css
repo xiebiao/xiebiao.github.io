@@ -136,6 +136,7 @@ html[lang^="en"] .language-toggle {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: calc(100svh - 4.25rem);
   padding: clamp(4rem, 7vh, 5rem) clamp(1.5rem, 8vw, 6rem) clamp(3rem, 6.5vh, 4rem);

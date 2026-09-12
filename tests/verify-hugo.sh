@@ -73,6 +73,7 @@ grep -q 'href="/zh/photos/"' "$english_homepage"
 grep -q 'href="/zh/photos/"' "$chinese_homepage"
 grep -q 'class="home-landing"' "$english_homepage"
 grep -q 'class="home-card"' "$english_homepage"
+grep -A5 '\.home-card {' "$output_dir/style.css" | grep -q 'justify-content: center'
 grep -q 'class="home-social-icons home-social-inline"' "$english_homepage"
 grep -q 'href="https://www\.threads\.com/@pushbeat\.app"' "$english_homepage"
 grep -q 'aria-label="Threads"' "$english_homepage"
