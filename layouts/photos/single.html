@@ -6,7 +6,7 @@
   <div class="photo-story-gallery">
     {{ range $image := .Params.images }}
     <figure class="photo-story-frame">
-      {{ partial "photo-image.html" (dict "image" $image "location" $.Params.location "date" ($.Date | time.Format ":date_long") "dateISO" ($.Date.Format "2006-01-02") "eager" false "sizes" "(max-width: 760px) calc(100vw - 2rem), 960px") }}
+      {{ partial "photo-image.html" (dict "image" $image "location" $.Params.location "date" ($.Date | time.Format ":date_long") "dateISO" ($.Date.Format "2006-01-02") "eager" false "lightbox" true "maxWidth" 960 "sizes" "(max-width: 760px) calc(100vw - 2rem), 760px") }}
     </figure>
     {{ end }}
   </div>
@@ -16,4 +16,8 @@
   </header>
   {{ partial "photo-navigation.html" . }}
 </main>
+{{ end }}
+
+{{ define "head" }}
+  <script src="{{ "photo-lightbox.js" | relURL }}" defer></script>
 {{ end }}

@@ -3,7 +3,11 @@
 {{ $hasDestinations := gt (len $destinations) 0 }}
 {{ $sizes := .sizes | default "(max-width: 900px) calc(100vw - 2rem), 1200px" }}
 {{ $maxWidth := .maxWidth | default 0 }}
+{{ $lightbox := .lightbox | default false }}
 {{ $asset := false }}
+{{ $lightboxURL := "" }}
+{{ $variants := slice }}
+{{ $fallback := false }}
 {{ $location := $image.location | default .location }}
 {{ $date := .date }}
 {{ $dateISO := .dateISO }}
@@ -11,20 +15,33 @@
   {{ $asset = index hugo.Data.media.assets . }}
   {{ if not $asset }}{{ errorf "unknown photo media asset %q" . }}{{ end }}
 {{ end }}
+{{ if $asset }}
+  {{ $variants = sort $asset.variants "width" "asc" }}
+  {{ $fullVariant := index (last 1 $variants) 0 }}
+  {{ $lightboxURL = $fullVariant.url }}
+  {{ if gt $maxWidth 0 }}
+    {{ $limitedVariants := where $variants "width" "le" $maxWidth }}
+    {{ if gt (len $limitedVariants) 0 }}{{ $variants = $limitedVariants }}{{ end }}
+  {{ end }}
+  {{ $fallback = index (last 1 $variants) 0 }}
+{{ else }}
+  {{ $lightboxURL = $image.src | relURL }}
+{{ end }}
 {{ if $hasDestinations }}
 <a
   class="photo-random-link"
   href="{{ index $destinations 0 }}"
   data-photo-destinations="{{ $destinations | jsonify }}"
   aria-label="{{ i18n "randomPhotoAria" }}">
+{{ else if $lightbox }}
+<a
+  class="photo-lightbox-link"
+  href="{{ $lightboxURL }}"
+  data-photo-lightbox
+  data-close-label="{{ i18n "closeImagePreview" }}"
+  aria-label="{{ i18n "enlargePhotoAria" }}">
 {{ end }}
 {{ if $asset }}
-  {{ $variants := sort $asset.variants "width" "asc" }}
-  {{ if gt $maxWidth 0 }}
-    {{ $limitedVariants := where $variants "width" "le" $maxWidth }}
-    {{ if gt (len $limitedVariants) 0 }}{{ $variants = $limitedVariants }}{{ end }}
-  {{ end }}
-  {{ $fallback := index (last 1 $variants) 0 }}
   <img
     src="{{ $fallback.url }}"
     srcset="{{ range $sourceIndex, $source := $variants }}{{ if $sourceIndex }}, {{ end }}{{ $source.url }} {{ $source.width }}w{{ end }}"
@@ -44,6 +61,8 @@
     {{ if .eager }}fetchpriority="high"{{ else }}loading="lazy"{{ end }}>
 {{ end }}
 {{ if $hasDestinations }}
+</a>
+{{ else if $lightbox }}
 </a>
 {{ end }}
 {{ if or $location $date }}
