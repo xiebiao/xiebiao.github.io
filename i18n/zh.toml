@@ -88,6 +88,12 @@ other = "访问项目 ↗"
 [viewProject]
 other = "查看项目"
 
+[projectExpenses]
+other = "累计支出"
+
+[projectRevenue]
+other = "累计收入"
+
 [viewPhotoStory]
 other = "查看影集"
 

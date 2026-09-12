@@ -8,6 +8,8 @@ externalURL: "https://pushbeat.app"
 platforms: "iOS · Android"
 status: "In active development"
 weight: 1
+expensesUSD: 124
+revenueUSD: 0
 ---
 
 ## Make every interval clear
