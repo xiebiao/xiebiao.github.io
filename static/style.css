@@ -1284,7 +1284,7 @@ figcaption {
 .project-card {
   overflow: hidden;
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 18px;
   background: var(--color-card);
   transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
