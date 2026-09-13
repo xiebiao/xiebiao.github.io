@@ -207,7 +207,7 @@
         const metadata = Object.fromEntries([...fields.querySelectorAll('[data-metadata]')].map(field => [field.name, field.value]));
         metadata.tags = metadata.tags.split(/[,，\n]/).map(v => v.trim()).filter(Boolean);
         metadata.articleRefs = metadata.articleRefs.split(/[,，\n]/).map(v => v.trim()).filter(Boolean);
-        try { save.disabled = true; await api(`/api/assets/${asset.id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(metadata)}); setStatus('元数据已保存并导出。'); await load(); }
+        try { save.disabled = true; await api(`/api/assets/${asset.id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(metadata)}); setStatus('元数据已保存，图片已插入关联文章并导出。'); await load(); }
         catch (error) { setStatus(error.message, true); } finally { save.disabled = false; }
       };
       const copy = document.createElement('button'); copy.textContent = '复制 shortcode';
@@ -246,7 +246,7 @@
         button.disabled = true; setStatus('正在上传原图，并通过 Cloudflare 生成 WebP，请稍候…');
         const form = new FormData(upload); const file = form.get('image');
         if (file instanceof File) { try { const bitmap = await createImageBitmap(file, {imageOrientation:'from-image'}); form.set('displayWidth', String(bitmap.width)); form.set('displayHeight', String(bitmap.height)); bitmap.close(); } catch (_) {} }
-        await api('/api/assets', {method:'POST', body:form}); upload.reset(); mountUploadPicker(); setStatus('上传完成，WebP 已永久存入 R2，Hugo 清单已更新。'); await load();
+        await api('/api/assets', {method:'POST', body:form}); upload.reset(); mountUploadPicker(); setStatus('上传完成，图片已插入关联文章，WebP 与 Hugo 清单已更新。'); await load();
       }
       catch (error) { setStatus(error.message, true); } finally { button.disabled = false; }
     });

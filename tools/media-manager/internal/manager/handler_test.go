@@ -53,6 +53,14 @@ func (f *failingObjects) Put(ctx context.Context, object manager.Object) error {
 func TestUserCanUpdateMetadataAndHugoManifest(t *testing.T) {
 	t.Parallel()
 	tmp := t.TempDir()
+	contentRoot := filepath.Join(tmp, "content")
+	if err := os.MkdirAll(filepath.Join(contentRoot, "posts"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	postPath := filepath.Join(contentRoot, "posts", "lenghu.zh.md")
+	if err := os.WriteFile(postPath, []byte("---\ntitle: \"冷湖\"\n---\n\n正文。\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 	repo, err := manager.OpenRepository(filepath.Join(tmp, "media.db"))
 	if err != nil {
 		t.Fatal(err)
@@ -66,12 +74,15 @@ func TestUserCanUpdateMetadataAndHugoManifest(t *testing.T) {
 		t.Fatal(err)
 	}
 	manifest := filepath.Join(tmp, "assets.json")
-	handler, err := manager.NewServer(manager.ServerOptions{Repository: repo, Objects: &memoryObjects{}, Manifest: manifest})
+	handler, err := manager.NewServer(manager.ServerOptions{
+		Repository: repo, Objects: &memoryObjects{}, Manifest: manifest, ContentRoot: contentRoot,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	updateBody := bytes.NewBufferString(`{"alt":"新的替代文本","caption":"文章题图","takenAt":"2026-08-01","location":"青海","copyright":"Bill Xie","tags":["摄影","旅行"],"articleRefs":["posts/lenghu"]}`)
+	const updateJSON = `{"alt":"新的替代文本","caption":"文章题图","takenAt":"2026-08-01","location":"青海","copyright":"Bill Xie","tags":["摄影","旅行"],"articleRefs":["posts/lenghu"]}`
+	updateBody := bytes.NewBufferString(updateJSON)
 	request := httptest.NewRequest(http.MethodPatch, "/api/assets/asset-1", updateBody)
 	request.Header.Set("Content-Type", "application/json")
 	response := httptest.NewRecorder()
@@ -90,6 +101,28 @@ func TestUserCanUpdateMetadataAndHugoManifest(t *testing.T) {
 	}
 	if exported["asset-1"].Alt != "新的替代文本" || len(exported["asset-1"].ArticleRefs) != 1 {
 		t.Fatalf("manifest was not updated: %+v", exported["asset-1"])
+	}
+	post, err := os.ReadFile(postPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	shortcode := `{{< figure asset="asset-1" >}}`
+	if strings.Count(string(post), shortcode) != 1 {
+		t.Fatalf("linked post shortcode count = %d, want 1:\n%s", strings.Count(string(post), shortcode), post)
+	}
+	secondRequest := httptest.NewRequest(http.MethodPatch, "/api/assets/asset-1", bytes.NewBufferString(updateJSON))
+	secondRequest.Header.Set("Content-Type", "application/json")
+	secondResponse := httptest.NewRecorder()
+	handler.ServeHTTP(secondResponse, secondRequest)
+	if secondResponse.Code != http.StatusOK {
+		t.Fatalf("second update status = %d, body = %s", secondResponse.Code, secondResponse.Body.String())
+	}
+	post, err = os.ReadFile(postPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Count(string(post), shortcode) != 1 {
+		t.Fatalf("re-saving metadata duplicated shortcode:\n%s", post)
 	}
 }
 
@@ -222,6 +255,83 @@ func TestUserCanUploadAndRetrieveAnAsset(t *testing.T) {
 	}
 	if len(transformer.calls) != 1 || transformer.calls[0] != 1 {
 		t.Fatalf("transform widths = %v, want [1]", transformer.calls)
+	}
+}
+
+func TestUploadInsertsAssetIntoLinkedHugoContent(t *testing.T) {
+	t.Parallel()
+	tmp := t.TempDir()
+	contentRoot := filepath.Join(tmp, "content")
+	writeContent := func(relative, body string) {
+		path := filepath.Join(contentRoot, relative)
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeContent("posts/story.en.md", "---\ntitle: \"A Story\"\n---\n\nEnglish body.\n")
+	writeContent("posts/story.zh.md", "---\ntitle: \"一篇文章\"\n---\n\n中文正文。\n")
+	writeContent("photos/journey.zh.md", "---\ntitle: \"一次旅行\"\nlocation: \"青海\"\n---\n\n影集正文。\n")
+
+	repo, err := manager.OpenRepository(filepath.Join(tmp, "media.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { repo.Close() })
+	handler, err := manager.NewServer(manager.ServerOptions{
+		Repository: repo, Objects: &memoryObjects{}, Transformer: &fakeTransformer{},
+		Manifest: filepath.Join(tmp, "assets.json"), ContentRoot: contentRoot,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	part, _ := writer.CreateFormFile("image", "field.jpg")
+	imageBytes, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")
+	_, _ = part.Write(imageBytes)
+	_ = writer.WriteField("alt", "青海的田野")
+	_ = writer.WriteField("caption", "夏末，冷湖")
+	_ = writer.WriteField("articleRefs", "posts/story, photos/journey")
+	_ = writer.Close()
+
+	request := httptest.NewRequest(http.MethodPost, "/api/assets", &body)
+	request.Header.Set("Content-Type", writer.FormDataContentType())
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+	if response.Code != http.StatusCreated {
+		t.Fatalf("upload status = %d, body = %s", response.Code, response.Body.String())
+	}
+	var uploaded manager.Asset
+	if err := json.Unmarshal(response.Body.Bytes(), &uploaded); err != nil {
+		t.Fatal(err)
+	}
+	shortcode := `{{< figure asset="` + uploaded.ID + `" >}}`
+	for _, relative := range []string{"posts/story.en.md", "posts/story.zh.md"} {
+		content, err := os.ReadFile(filepath.Join(contentRoot, relative))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(string(content), shortcode) {
+			t.Errorf("%s does not contain %s:\n%s", relative, shortcode, content)
+		}
+	}
+	photo, err := os.ReadFile(filepath.Join(contentRoot, "photos/journey.zh.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, expected := range []string{
+		`coverAsset: "` + uploaded.ID + `"`,
+		`coverAlt: "青海的田野"`,
+		"images:\n  - asset: \"" + uploaded.ID + "\"\n    alt: \"青海的田野\"\n    caption: \"夏末，冷湖\"",
+		"影集正文。",
+	} {
+		if !strings.Contains(string(photo), expected) {
+			t.Errorf("photo content does not contain %q:\n%s", expected, photo)
+		}
 	}
 }
 
