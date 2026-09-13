@@ -1641,7 +1641,7 @@ figcaption {
 }
 
 .photo-latest-page .photo-story-gallery {
-  width: min(100%, 960px);
+  width: min(100%, 760px);
 }
 
 .photo-single-page .photo-story-gallery {
