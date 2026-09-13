@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ site.Language.Locale }}">
 <head>
+  {{ $hasPageImage := or (isset .Params "image") (isset .Params "cover") (isset .Params "coverasset") }}
   {{ $socialImage := .Params.image | default .Params.cover }}
   {{ with .Params.coverAsset }}
     {{ $coverAsset := index hugo.Data.media.assets . }}
@@ -12,26 +13,39 @@
     {{ end }}
   {{ end }}
   {{ $socialImage = $socialImage | default "images/photo-1920w.jpg" }}
+  {{ $socialImageAlt := .Params.coverAlt | default .Params.imageAlt | default .Title | default site.Title }}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
   <meta name="description" content="{{ .Description | default site.Params.description }}">
+  <meta name="author" content="{{ site.Params.author }}">
+  <meta name="robots" content="max-image-preview:large">
   <link rel="canonical" href="{{ .Permalink }}">
+  {{ $xDefaultURL := "" }}
   {{ range .AllTranslations }}
   <link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
+  {{ if eq .Language.Lang "en" }}{{ $xDefaultURL = .Permalink }}{{ end }}
   {{ end }}
+  {{ with $xDefaultURL }}<link rel="alternate" hreflang="x-default" href="{{ . }}">{{ end }}
+  {{ with .OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ .Permalink }}">{{ end }}
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
   <meta property="og:url" content="{{ .Permalink }}">
   <meta property="og:site_name" content="xiebiao.com">
   <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
   <meta property="og:description" content="{{ .Description | default site.Params.description }}">
   <meta property="og:image" content="{{ $socialImage | absURL }}">
+  <meta property="og:image:alt" content="{{ $socialImageAlt }}">
   <meta property="og:locale" content="{{ site.Language.Params.ogLocale }}">
   {{ range .Translations }}<meta property="og:locale:alternate" content="{{ .Language.Params.ogLocale }}">{{ end }}
+  {{ if and .IsPage (or (eq .Section "posts") (eq .Section "photos")) }}
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+  <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+  {{ end }}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
   <meta name="twitter:description" content="{{ .Description | default site.Params.description }}">
   <meta name="twitter:image" content="{{ $socialImage | absURL }}">
+  <meta name="twitter:image:alt" content="{{ $socialImageAlt }}">
   <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ "favicon-16x16.png" | relURL }}">
@@ -40,6 +54,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css">
   <link rel="stylesheet" href="{{ "style.css" | relURL }}">
+  {{ partial "seo/structured-data.html" (dict "page" . "socialImage" ($socialImage | absURL) "hasPageImage" $hasPageImage) }}
   {{ block "head" . }}{{ end }}
 </head>
 <body>

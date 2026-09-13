@@ -1,0 +1,130 @@
+{{- $page := .page -}}
+{{- $socialImage := .socialImage -}}
+{{- $hasPageImage := .hasPageImage -}}
+{{- $personID := "https://xiebiao.com/#person" -}}
+{{- $websiteID := "https://xiebiao.com/#website" -}}
+{{- $description := $page.Description | default site.Params.description -}}
+{{- $person := dict
+  "@type" "Person"
+  "@id" $personID
+  "name" "Bill Xie"
+  "alternateName" "于川海"
+  "url" "https://xiebiao.com/"
+  "image" "https://xiebiao.com/images/my-avatar-256.png"
+  "jobTitle" "Independent Software Engineer"
+  "sameAs" (slice
+    "https://x.com/joyrap"
+    "https://www.douban.com/people/xiebiao80/"
+  )
+-}}
+{{- $website := dict
+  "@type" "WebSite"
+  "@id" $websiteID
+  "url" "https://xiebiao.com/"
+  "name" "xiebiao.com"
+  "inLanguage" (slice "en-US" "zh-CN")
+  "publisher" (dict "@id" $personID)
+-}}
+{{- $graph := slice $person $website -}}
+
+{{- if $page.IsHome -}}
+  {{- $profile := dict
+    "@type" "ProfilePage"
+    "@id" (printf "%s#webpage" $page.Permalink)
+    "url" $page.Permalink
+    "name" site.Title
+    "description" $description
+    "inLanguage" $page.Language.Locale
+    "isPartOf" (dict "@id" $websiteID)
+    "mainEntity" (dict "@id" $personID)
+  -}}
+  {{- $pushbeat := dict
+    "@type" "SoftwareApplication"
+    "@id" "https://pushbeat.app/#app"
+    "name" "PushBeat"
+    "url" "https://pushbeat.app/"
+    "description" "A focused fitness training timer for athletes."
+    "applicationCategory" "SportsApplication"
+    "operatingSystem" "iOS, Android"
+    "creator" (dict "@id" $personID)
+    "sameAs" (slice
+      "https://www.threads.com/@pushbeat.app"
+      "https://www.instagram.com/pushbeat.app"
+    )
+  -}}
+  {{- $graph = $graph | append $profile $pushbeat -}}
+{{- else -}}
+  {{- $webpage := dict
+    "@type" "WebPage"
+    "@id" (printf "%s#webpage" $page.Permalink)
+    "url" $page.Permalink
+    "name" $page.Title
+    "description" $description
+    "inLanguage" $page.Language.Locale
+    "isPartOf" (dict "@id" $websiteID)
+  -}}
+
+  {{- if and $page.IsPage (eq $page.Section "posts") -}}
+    {{- $article := dict
+      "@type" "BlogPosting"
+      "@id" (printf "%s#article" $page.Permalink)
+      "url" $page.Permalink
+      "headline" $page.Title
+      "description" $description
+      "datePublished" ($page.Date.Format "2006-01-02T15:04:05Z07:00")
+      "dateModified" ($page.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+      "inLanguage" $page.Language.Locale
+      "author" (dict "@id" $personID)
+      "mainEntityOfPage" (dict "@id" (printf "%s#webpage" $page.Permalink))
+    -}}
+    {{- if $hasPageImage }}{{ $article = merge $article (dict "image" $socialImage) }}{{ end -}}
+    {{- $webpage = merge $webpage (dict "mainEntity" (dict "@id" (printf "%s#article" $page.Permalink))) -}}
+    {{- $graph = $graph | append $webpage $article -}}
+  {{- else if and $page.IsPage (eq $page.Section "photos") -}}
+    {{- $imageID := printf "%s#primaryimage" $page.Permalink -}}
+    {{- $image := dict
+      "@type" "ImageObject"
+      "@id" $imageID
+      "name" $page.Title
+      "description" $description
+      "contentUrl" $socialImage
+      "caption" ($page.Params.coverAlt | default $page.Title)
+      "dateCreated" ($page.Date.Format "2006-01-02")
+      "creator" (dict "@id" $personID)
+      "copyrightNotice" site.Params.author
+      "representativeOfPage" true
+    -}}
+    {{- with $page.Params.location }}{{ $image = merge $image (dict "contentLocation" (dict "@type" "Place" "name" .)) }}{{ end -}}
+    {{- with $page.Params.coverAsset -}}
+      {{- with index hugo.Data.media.assets . -}}
+        {{- $variants := sort .variants "width" "asc" -}}
+        {{- with index (last 1 $variants) 0 -}}
+          {{- $image = merge $image (dict "width" .width "height" .height "contentUrl" .url) -}}
+        {{- end -}}
+        {{- with .copyright }}{{ $image = merge $image (dict "copyrightNotice" .) }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $webpage = merge $webpage (dict "primaryImageOfPage" (dict "@id" $imageID) "mainEntity" (dict "@id" $imageID)) -}}
+    {{- $graph = $graph | append $webpage $image -}}
+  {{- else if and $page.IsPage (eq $page.Section "projects") -}}
+    {{- $projectID := printf "%s#project" $page.Permalink -}}
+    {{- $projectURL := $page.Permalink -}}
+    {{- with $page.Params.externalURL }}{{ $projectURL = . }}{{ end -}}
+    {{- $project := dict
+      "@type" "SoftwareApplication"
+      "@id" $projectID
+      "name" $page.Title
+      "url" $projectURL
+      "description" $description
+      "applicationCategory" "SoftwareApplication"
+      "operatingSystem" ($page.Params.platforms | default "Web")
+      "creator" (dict "@id" $personID)
+      "mainEntityOfPage" (dict "@id" (printf "%s#webpage" $page.Permalink))
+    -}}
+    {{- $webpage = merge $webpage (dict "mainEntity" (dict "@id" $projectID)) -}}
+    {{- $graph = $graph | append $webpage $project -}}
+  {{- else -}}
+    {{- $graph = $graph | append $webpage -}}
+  {{- end -}}
+{{- end -}}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>
