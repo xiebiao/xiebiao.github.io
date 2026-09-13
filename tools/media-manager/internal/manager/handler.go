@@ -22,6 +22,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -38,7 +39,10 @@ type ServerOptions struct {
 	ContentRoot string
 }
 
-type server struct{ options ServerOptions }
+type server struct {
+	options   ServerOptions
+	contentMu sync.Mutex
+}
 
 func NewServer(options ServerOptions) (http.Handler, error) {
 	if options.Repository == nil || options.Objects == nil || options.Manifest == "" {
@@ -187,6 +191,10 @@ func (s *server) asset(w http.ResponseWriter, r *http.Request) {
 		}
 		if err := exportManifest(r.Context(), s.options.Repository, s.options.Manifest); err != nil {
 			writeError(w, http.StatusInternalServerError, "metadata saved but manifest export failed: "+err.Error())
+			return
+		}
+		if err := s.insertAssetIntoContent(asset); err != nil {
+			writeError(w, http.StatusInternalServerError, "metadata saved but linked content update failed: "+err.Error())
 			return
 		}
 		writeJSON(w, http.StatusOK, asset)
@@ -344,6 +352,13 @@ func (s *server) upload(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := exportManifest(r.Context(), s.options.Repository, s.options.Manifest); err != nil {
 		writeError(w, http.StatusInternalServerError, "asset saved but manifest export failed: "+err.Error())
+		return
+	}
+	if err := s.insertAssetIntoContent(asset); err != nil {
+		_ = s.options.Repository.Delete(context.WithoutCancel(r.Context()), asset.ID)
+		_ = exportManifest(context.WithoutCancel(r.Context()), s.options.Repository, s.options.Manifest)
+		_ = s.options.Objects.Delete(context.WithoutCancel(r.Context()), uploadedKeys)
+		writeError(w, http.StatusInternalServerError, "linked content update failed; uploaded asset was rolled back: "+err.Error())
 		return
 	}
 	writeJSON(w, http.StatusCreated, asset)

@@ -1,4 +1,56 @@
 {
+  "0e4650d2-b357-4d8e-b25b-c4ce63a912da": {
+    "id": "0e4650d2-b357-4d8e-b25b-c4ce63a912da",
+    "filename": "sichuan-aba.jpg",
+    "mimeType": "image/jpeg",
+    "checksum": "934a34ea8ee68e62c4bf77fded4a2c0e7ef620c84327839d7d0baab24361bcde",
+    "width": 3024,
+    "height": 4032,
+    "alt": "四川，阿坝县，郎依寺",
+    "caption": "四川，阿坝县，郎依寺",
+    "takenAt": "2026-08-05",
+    "copyright": "Bill Xie",
+    "tags": [],
+    "articleRefs": [
+      "photos/sichuan-aba-county"
+    ],
+    "variants": [
+      {
+        "width": 480,
+        "height": 640,
+        "format": "webp",
+        "key": "posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/480.webp",
+        "url": "https://media.xiebiao.com/posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/480.webp",
+        "size": 65646
+      },
+      {
+        "width": 960,
+        "height": 1280,
+        "format": "webp",
+        "key": "posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/960.webp",
+        "url": "https://media.xiebiao.com/posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/960.webp",
+        "size": 233620
+      },
+      {
+        "width": 1440,
+        "height": 1920,
+        "format": "webp",
+        "key": "posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/1440.webp",
+        "url": "https://media.xiebiao.com/posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/1440.webp",
+        "size": 461014
+      },
+      {
+        "width": 1920,
+        "height": 2560,
+        "format": "webp",
+        "key": "posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/1920.webp",
+        "url": "https://media.xiebiao.com/posts/0e4650d2-b357-4d8e-b25b-c4ce63a912da/1920.webp",
+        "size": 744150
+      }
+    ],
+    "createdAt": "2026-09-13T04:16:42Z",
+    "updatedAt": "2026-09-13T04:26:44Z"
+  },
   "49d87493-cc4b-4f0c-820e-07faa01ece70": {
     "id": "49d87493-cc4b-4f0c-820e-07faa01ece70",
     "filename": "blog-photo-1920w.jpg",

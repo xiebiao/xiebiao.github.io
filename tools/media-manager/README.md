@@ -29,6 +29,8 @@ Open <http://127.0.0.1:7331>. Image resizing and WebP encoding happen through Cl
 
 The manager scans `../../content/posts` and `../../content/photos` through `GET /api/content`. Translations with the same source basename are merged into one stable reference, such as `posts/my-post` or `photos/my-gallery`, and can be selected when uploading or editing an asset. Override the Hugo content directory with `MEDIA_CONTENT` when starting the service from another layout.
 
+When an asset is linked to content, the manager updates every language file represented by that stable reference. Posts receive a `figure` shortcode at the end of the Markdown body. Photos receive an entry in the front matter `images` list; the first linked image also becomes `coverAsset` and supplies `coverAlt`. Re-saving metadata is idempotent and will not insert the same asset twice.
+
 ## Object and metadata model
 
 - Original: `posts/{asset-id}/original.{ext}`
