@@ -1621,9 +1621,9 @@ figcaption {
 .photo-story-header h1 {
   margin: 0;
   font-family: inherit;
-  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .photo-story-intro {
