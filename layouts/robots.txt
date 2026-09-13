@@ -1,0 +1,25 @@
+# Search engines may crawl and index the public site.
+User-agent: *
+Allow: /
+
+# Allow ChatGPT search and user-requested retrieval without opting in to training.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+# Anthropic also separates search/user retrieval from its training crawler.
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+Sitemap: {{ "sitemap.xml" | absURL }}

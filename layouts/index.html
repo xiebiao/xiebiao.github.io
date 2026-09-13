@@ -1,35 +1,3 @@
-{{ define "head" }}
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Person",
-          "@id": "https://xiebiao.com/#person",
-          "name": "Bill Xie",
-          "url": "https://xiebiao.com/",
-          "image": "https://xiebiao.com/images/my-avatar-256.png",
-          "sameAs": [
-            "https://x.com/joyrap",
-            "https://www.douban.com/people/xiebiao80/",
-            "https://www.threads.com/@pushbeat.app"
-          ]
-        },
-        {
-          "@type": "SoftwareApplication",
-          "@id": "https://pushbeat.app/#app",
-          "name": "PushBeat",
-          "url": "https://pushbeat.app/",
-          "description": "A focused fitness training timer for athletes.",
-          "applicationCategory": "SportsApplication",
-          "operatingSystem": "iOS, Android",
-          "creator": { "@id": "https://xiebiao.com/#person" }
-        }
-      ]
-    }
-  </script>
-{{ end }}
-
 {{ define "main" }}
 <main class="home-landing">
   <section class="home-card" aria-labelledby="home-heading">

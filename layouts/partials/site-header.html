@@ -17,8 +17,10 @@
     {{ end }}
   {{ end }}
 {{ end }}
-<header class="site-header">
-  <a class="language-toggle" href="{{ $targetURL }}" hreflang="{{ $targetLanguage }}" aria-label="{{ i18n "switchLanguage" }}">
-    {{ i18n "switchLanguageLabel" }}
-  </a>
-</header>
+{{ if $targetURL }}
+  <header class="site-header">
+    <a class="language-toggle" href="{{ $targetURL }}" hreflang="{{ $targetLanguage }}" aria-label="{{ i18n "switchLanguage" }}">
+      {{ i18n "switchLanguageLabel" }}
+    </a>
+  </header>
+{{ end }}
