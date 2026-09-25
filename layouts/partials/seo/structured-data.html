@@ -11,7 +11,9 @@
   "alternateName" "于川海"
   "url" "https://xiebiao.com/"
   "image" "https://xiebiao.com/images/my-avatar-256.png"
-  "jobTitle" "Independent Software Engineer"
+  "description" site.Language.Params.personDescription
+  "jobTitle" site.Language.Params.jobTitle
+  "knowsAbout" site.Language.Params.knowsAbout
   "sameAs" (slice
     "https://x.com/joyrap"
     "https://www.douban.com/people/xiebiao80/"
@@ -22,7 +24,9 @@
   "@id" $websiteID
   "url" "https://xiebiao.com/"
   "name" "xiebiao.com"
+  "description" site.Params.description
   "inLanguage" (slice "en-US" "zh-CN")
+  "about" (dict "@id" $personID)
   "publisher" (dict "@id" $personID)
 -}}
 {{- $graph := slice $person $website -}}
@@ -32,7 +36,7 @@
     "@type" "ProfilePage"
     "@id" (printf "%s#webpage" $page.Permalink)
     "url" $page.Permalink
-    "name" site.Title
+    "name" (site.Language.Params.homeTitle | default site.Title)
     "description" $description
     "inLanguage" $page.Language.Locale
     "isPartOf" (dict "@id" $websiteID)

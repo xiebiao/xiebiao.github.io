@@ -10,7 +10,16 @@
       </a>
       <h1 id="home-heading">{{ i18n "profileName" }}</h1>
       <a class="home-site-link" href="https://xiebiao.com">www.xiebiao.com</a>
-      <p class="home-intro">{{ i18n "homeIntro" }}</p>
+      <p class="home-intro">
+        <span>{{ i18n "homeIntro" }}</span>
+        {{ if eq .Language.Lang "en" }}
+        <br>
+        <span>{{ i18n "homeBuildingSelf" }}<br>
+          {{ i18n "homeBuildingDaughter" }}<br>
+          {{ i18n "homeBuildingFun" }}<br>
+          {{ i18n "homeBuildingMoney" }}</span>
+        {{ end }}
+      </p>
       <nav class="home-social-icons home-social-inline" aria-label="Social links">
         <a href="https://x.com/joyrap" target="_blank" rel="noopener noreferrer" aria-label="X">
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

@@ -246,6 +246,12 @@ html[lang^="en"] .language-toggle {
   line-height: 1.8;
 }
 
+html[lang^="en"] .home-intro {
+  max-width: 34em;
+  text-wrap: balance;
+  word-break: normal;
+}
+
 .home-module-nav {
   display: flex;
   align-items: center;

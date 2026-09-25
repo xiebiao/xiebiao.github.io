@@ -14,12 +14,14 @@
   {{ end }}
   {{ $socialImage = $socialImage | default "images/photo-1920w.jpg" }}
   {{ $socialImageAlt := .Params.coverAlt | default .Params.imageAlt | default .Title | default site.Title }}
+  {{ $pageTitle := printf "%s · %s" .Title site.Title }}
+  {{ if .IsHome }}{{ $pageTitle = site.Language.Params.homeTitle | default site.Title }}{{ end }}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  <title>{{ $pageTitle }}</title>
   <meta name="description" content="{{ .Description | default site.Params.description }}">
   <meta name="author" content="{{ site.Params.author }}">
-  <meta name="robots" content="max-image-preview:large">
+  <meta name="robots" content="max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <link rel="canonical" href="{{ .Permalink }}">
   {{ $xDefaultURL := "" }}
   {{ range .AllTranslations }}
@@ -31,7 +33,7 @@
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
   <meta property="og:url" content="{{ .Permalink }}">
   <meta property="og:site_name" content="xiebiao.com">
-  <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:title" content="{{ $pageTitle }}">
   <meta property="og:description" content="{{ .Description | default site.Params.description }}">
   <meta property="og:image" content="{{ $socialImage | absURL }}">
   <meta property="og:image:alt" content="{{ $socialImageAlt }}">
@@ -42,7 +44,7 @@
   <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
   {{ end }}
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:title" content="{{ $pageTitle }}">
   <meta name="twitter:description" content="{{ .Description | default site.Params.description }}">
   <meta name="twitter:image" content="{{ $socialImage | absURL }}">
   <meta name="twitter:image:alt" content="{{ $socialImageAlt }}">

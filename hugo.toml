@@ -18,7 +18,11 @@ enableRobotsTXT = true
     title = "于川海"
     weight = 2
     [languages.zh.params]
-      description = "于川海（Bill Xie）的个人网站，记录摄影、诗歌与独立作品，包括运动训练计时器 PushBeat。"
+      homeTitle = "于川海 · 独立软件工程师"
+      description = "于川海（Bill Xie）是一名生活在中国的独立软件工程师，分享独立产品、写作与摄影作品。"
+      personDescription = "生活在中国的独立软件工程师，认真构建独立产品，并分享写作与摄影作品。"
+      jobTitle = "独立软件工程师"
+      knowsAbout = ["独立软件开发", "产品设计", "写作", "摄影"]
       ogLocale = "zh_CN"
   [languages.en]
     label = "English"
@@ -26,7 +30,11 @@ enableRobotsTXT = true
     title = "Bill Xie"
     weight = 1
     [languages.en.params]
-      description = "Bill Xie's personal website about photography, poetry, independent software, and PushBeat."
+      homeTitle = "Bill Xie · Independent Software Engineer"
+      description = "Bill Xie is an independent software engineer in China building thoughtful products for himself, his daughter, for fun, and for a living."
+      personDescription = "Independent software engineer in China building thoughtful products for himself, his daughter, for fun, and for a living."
+      jobTitle = "Independent Software Engineer"
+      knowsAbout = ["Independent software development", "Product design", "Writing", "Photography"]
       ogLocale = "en_US"
 
 [permalinks]
