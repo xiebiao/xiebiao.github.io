@@ -16,6 +16,7 @@
         {{ $projectURL = . }}
         {{ $isExternal = true }}
       {{ end }}
+      {{ $statusState := .Params.statusstate | default "active" }}
       <article class="project-card">
         <a class="project-card-link" href="{{ $projectURL }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
           <div class="project-card-topline">
@@ -25,7 +26,11 @@
               {{ end }}
               <h2>{{ .Title }}</h2>
             </div>
-            {{ with .Params.status }}<span class="project-card-status">{{ . }}</span>{{ end }}
+            {{ with .Params.status }}
+            <span class="project-card-status project-card-status--{{ $statusState | urlize }}" role="img" aria-label="{{ . }}" title="{{ . }}">
+              <span class="project-card-status-dot" aria-hidden="true"></span>
+            </span>
+            {{ end }}
           </div>
           <div class="project-card-copy">
             {{ with .Description }}<p>{{ . }}</p>{{ end }}

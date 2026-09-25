@@ -1,4 +1,5 @@
 baseURL = "https://xiebiao.com/"
+assetDir = "static"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 enableRobotsTXT = true

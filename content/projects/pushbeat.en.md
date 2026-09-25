@@ -7,6 +7,7 @@ logo: "images/pushbeat-mark.svg"
 externalURL: "https://pushbeat.app"
 platforms: "iOS · Android"
 status: "In active development"
+statusState: "active"
 weight: 1
 expensesUSD: 124
 revenueUSD: 0

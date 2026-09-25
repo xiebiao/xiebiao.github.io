@@ -6,7 +6,8 @@ description: "项目模板测试。"
 logo: "images/pushbeat-mark.svg"
 externalURL: "https://example.com"
 platforms: "Web"
-status: "开发中"
+status: "停止开发"
+statusState: "stopped"
 ---
 
 项目正文。

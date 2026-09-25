@@ -7,6 +7,7 @@ externalURL: "https://opencreators.ai"
 logo: "images/opencreators-mark.svg"
 platforms: "Web"
 status: "In active development"
+statusState: "active"
 weight: 2
 expensesUSD: 0
 revenueUSD: 0

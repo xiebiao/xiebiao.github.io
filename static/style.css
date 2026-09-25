@@ -1305,7 +1305,7 @@ figcaption {
   display: flex;
   flex-direction: column;
   min-height: 280px;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
+  padding: clamp(1rem, 1.5vw, 1.25rem);
   color: inherit;
 }
 
@@ -1343,14 +1343,28 @@ figcaption {
 }
 
 .project-card-status {
+  display: inline-flex;
   flex: 0 0 auto;
-  max-width: 11rem;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  color: var(--color-muted);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-align: right;
-  text-transform: uppercase;
+}
+
+.project-card-status-dot {
+  display: block;
+  flex: 0 0 auto;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--color-muted);
+}
+
+.project-card-status--active .project-card-status-dot {
+  background: #3f8f5b;
+}
+
+.project-card-status--stopped .project-card-status-dot {
+  background: #b44747;
 }
 
 .project-card h2 {
@@ -1803,7 +1817,7 @@ figcaption {
 
   .project-card-link {
     min-height: 270px;
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .project-card-grid {

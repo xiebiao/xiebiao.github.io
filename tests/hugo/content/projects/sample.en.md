@@ -6,7 +6,8 @@ description: "Project template fixture."
 logo: "images/pushbeat-mark.svg"
 externalURL: "https://example.com"
 platforms: "Web"
-status: "In development"
+status: "Development stopped"
+statusState: "stopped"
 ---
 
 Project body.
