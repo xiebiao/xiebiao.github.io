@@ -32,8 +32,8 @@ enableRobotsTXT = true
     weight = 1
     [languages.en.params]
       homeTitle = "Bill Xie · Independent Software Engineer"
-      description = "Bill Xie is an independent software engineer in China building thoughtful products for himself, his daughter, for fun, and for a living."
-      personDescription = "Independent software engineer in China building thoughtful products for himself, his daughter, for fun, and for a living."
+      description = "Bill Xie is an independent software engineer in China building thoughtful products for fun and for a living."
+      personDescription = "Independent software engineer in China building thoughtful products for fun and for a living."
       jobTitle = "Independent Software Engineer"
       knowsAbout = ["Independent software development", "Product design", "Writing", "Photography"]
       ogLocale = "en_US"
